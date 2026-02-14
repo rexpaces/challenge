@@ -1,0 +1,139 @@
+@import '../../styles/colors.scss';
+
+.timeline-grid-container {
+  display: flex;
+  background-color: $color-bg-white;
+  border: $border-default;
+  height: 100%;
+}
+
+/* Left Panel */
+.left-panel {
+  width: $left-panel-width;
+  min-height: $left-panel-min-height;
+  flex-shrink: 0;
+  border-right: $border-default;
+  display: flex;
+  flex-direction: column;
+  background-color: $color-bg-white;
+}
+
+.left-panel-header {
+  // padding-top: $spacing-xs;
+  // padding-bottom: $spacing-sm;
+  height: 32px;
+  padding-left: $spacing-xl;
+  display: flex;
+  align-items: center;
+  color: $color-slate;
+  font-family: 'Circular-Std';
+  font-size: $font-size-default;
+  font-weight: 400;
+  line-height: $line-height-default;
+  border-bottom: $border-default;
+}
+
+.left-panel-content {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.work-center-row {
+  // padding-top: 16px;
+  // padding-bottom: 16px;
+  padding-left: 31px;
+  display: flex;
+  align-items: center;
+  color: $color-dark-blue;
+  font-family: 'Circular-Std';
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 17px;
+  height: 48px;
+  border-top: 1px solid #E6EBF0;
+  background-color: $color-bg-white;
+  transition: $transition-default;
+
+  &:last-child {
+    border-bottom: 1px solid #E6EBF0;
+  }
+
+  &:first-child {
+    padding-top: 28px;
+    border-top: unset;
+    height: 60px;
+    padding-bottom: 16px;
+  }
+}
+
+.work-center-row:hover {
+  background-color: $color-bg-hover-left;
+  border-top: unset;
+}
+
+/* Right Panel */
+.right-panel {
+  flex: 1;
+  overflow-x: auto;
+  overflow-y: hidden;
+  background-color: $color-bg-white;
+}
+
+.header-container {
+  display: flex;
+  position: sticky;
+  top: 0;
+  z-index: $z-index-sticky-header;
+  background-color: $color-bg-white;
+}
+
+.date-column-header {
+  // padding-top: 8px;
+  // padding-bottom: 8px;
+  height: 32px;
+  // padding-left: 14px;
+  // padding-right: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $color-slate;
+  font-family: $font-family-default;
+  font-size: $font-size-default;
+  font-weight: 400;
+  text-align: center;
+  line-height: $line-height-default;
+  flex-shrink: 0;
+  // border-right: $border-default;
+  border-bottom: $border-default;
+  background-color: $color-bg-white;
+}
+
+.grid-content {
+  background-color: $color-bg-grid;
+}
+
+.grid-row {
+  display: flex;
+  height: 48px;
+  // border-bottom: $border-default;
+  transition: $transition-default;
+
+  &:first-child {
+    height: 60px;
+  }
+}
+
+.grid-row:hover {
+  background-color: $color-bg-hover-right;
+}
+
+.grid-cell {
+  border-right: $border-default;
+  flex-shrink: 0;
+  background-color: $color-bg-grid;
+  height: 100%;
+}
+
+.grid-row:hover .grid-cell {
+  background-color: $color-bg-hover-right;
+}

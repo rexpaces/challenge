@@ -1,0 +1,47 @@
+/**
+ * Color Palette
+ * Centralized color definitions for the application
+ */
+
+// Primary colors
+$color-white: rgba(255, 255, 255, 1);
+$color-dark-blue: rgba(3, 9, 41, 1);
+$color-slate: rgba(104, 113, 150, 1);
+
+// Border colors
+$color-border-light: #E6EBF0;
+
+// Background colors
+$color-bg-white: rgba(255, 255, 255, 1);
+$color-bg-grid: #F7F9FC;
+$color-bg-hover-left: #FAFBFD;
+$color-bg-hover-right: #EEF0FF;
+
+// Typography
+$font-family-default: "Circular-Std";
+$font-size-default: 14px;
+$font-weight-default: 500;
+$line-height-default: 17px;
+
+// Spacing
+$spacing-xs: 8px;
+$spacing-sm: 9px;
+$spacing-md: 14px;
+$spacing-lg: 16px;
+$spacing-xl: 31px;
+
+// Dimensions
+$left-panel-width: 382px;
+$left-panel-min-height: 749px;
+$header-min-height: 33px;
+$row-min-height: 48px;
+$column-width-month: 113px;
+
+// Borders
+$border-default: 1px solid $color-border-light;
+
+// Z-index
+$z-index-sticky-header: 10;
+
+// Transitions
+$transition-default: background-color 0.2s ease;

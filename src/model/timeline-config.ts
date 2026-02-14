@@ -52,7 +52,7 @@ export const TIMELINE_CONFIG: Record<ZoomLevel, ZoomLevelConfig> = {
     label: 'Month',
     rangeBeforeHours: 24 * 30 * 6, // 6 months
     rangeAfterHours: 24 * 30 * 6, // 6 months
-    columnWidthPixels: 120, // pixels per month
+    columnWidthPixels: 113, // pixels per month
   },
 };
 
