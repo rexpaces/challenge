@@ -92,10 +92,12 @@ The Timeline Grid component is a two-panel layout for visualizing work centers a
   - `data.name`: string (e.g., "Assembly Line A")
 
 ### Visible Date Range
-- **Default**: Centered on today's date
-- **Range**: 6 months before and 6 months after today
+- **Default**: Loaded range is 12 months before to 12 months after today (24-month buffer)
+- **Initial Scroll Position**: Today is the second visible month (previous month + current month visible)
 - **Calculation**: Based on TIMELINE_CONFIG (month zoom level)
 - **Format**: ISO 8601 datetime
+- **User can expand**: Left/right edge detection triggers 3-month expansion
+- **Smooth Scrolling**: Very large buffer allows smooth scroll in both directions with no lag when scrolling to past
 
 ## Implementation Details
 

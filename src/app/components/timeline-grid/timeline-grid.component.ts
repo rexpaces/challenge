@@ -1,6 +1,7 @@
 import {
   Component,
   OnInit,
+  AfterViewInit,
   ChangeDetectionStrategy,
   signal,
   computed,
@@ -25,7 +26,7 @@ interface DateRange {
   styleUrl: './timeline-grid.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TimelineGridComponent implements OnInit, OnDestroy {
+export class TimelineGridComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('rightPanel') rightPanel?: ElementRef<HTMLElement>;
 
   // State
@@ -34,9 +35,11 @@ export class TimelineGridComponent implements OnInit, OnDestroy {
     start: new Date(),
     end: new Date()
   });
+  private hoveredRowIndex = signal<number | null>(null);
 
   // Computed properties
   workCenters = this.workCenterList.asReadonly();
+  hoveredRowIndex$ = this.hoveredRowIndex.asReadonly();
 
   visibleDates = computed(() => {
     const range = this.visibleDateRange();
@@ -58,7 +61,14 @@ export class TimelineGridComponent implements OnInit, OnDestroy {
     return getZoomConfig(DEFAULT_ZOOM_LEVEL).columnWidthPixels;
   });
 
-  private scrollTimeout: any;
+  // Memoized set of hovered row indices for efficient template binding
+  hoveredRowIndices = computed(() => {
+    const index = this.hoveredRowIndex();
+    return index !== null ? new Set([index]) : new Set<number>();
+  });
+
+  private scrollThrottleActive = false;
+  private isInitializing = true;
 
   constructor() {
     this.initializeVisibleRange();
@@ -69,28 +79,63 @@ export class TimelineGridComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.scrollTimeout) {
-      clearTimeout(this.scrollTimeout);
-    }
+    this.scrollThrottleActive = false;
   }
 
   private initializeVisibleRange() {
     const today = new Date();
-    const config = getZoomConfig(DEFAULT_ZOOM_LEVEL);
 
-    // Calculate start: 6 months before today
+    // Calculate start: 12 months before today (for smooth infinite scroll)
     const start = new Date(today);
-    start.setMonth(start.getMonth() - 6);
+    start.setMonth(start.getMonth() - 12);
     start.setDate(1);
     start.setHours(0, 0, 0, 0);
 
-    // Calculate end: 6 months after today
+    // Calculate end: 12 months after today (for smooth infinite scroll)
     const end = new Date(today);
-    end.setMonth(end.getMonth() + 6);
+    end.setMonth(end.getMonth() + 12);
     end.setDate(0); // Last day of month
     end.setHours(23, 59, 59, 999);
 
     this.visibleDateRange.set({ start, end });
+  }
+
+  ngAfterViewInit() {
+    // Scroll right panel so today is the second visible month
+    if (this.rightPanel) {
+      this.scrollToPositionToday();
+    }
+  }
+
+  private scrollToPositionToday() {
+    if (!this.rightPanel) return;
+
+    const element = this.rightPanel.nativeElement;
+    const today = new Date();
+    const range = this.visibleDateRange();
+
+    // Calculate how many months between range start and today
+    let monthsFromStart = 0;
+    let current = new Date(range.start);
+    current.setDate(1);
+
+    while (current < today) {
+      monthsFromStart++;
+      current.setMonth(current.getMonth() + 1);
+    }
+
+    // Calculate scroll position: today should be the second visible month
+    // So we scroll to show (today - 1 month) at the start
+    const columnWidth = this.columnWidth();
+    const scrollPosition = (monthsFromStart - 1) * columnWidth;
+
+    // Scroll to position with today as second visible month
+    element.scrollLeft = Math.max(0, scrollPosition);
+
+    // Allow scroll handler to start working after initial positioning settles
+    requestAnimationFrame(() => {
+      this.isInitializing = false;
+    });
   }
 
   private loadWorkCenters() {
@@ -110,36 +155,55 @@ export class TimelineGridComponent implements OnInit, OnDestroy {
   }
 
   onHorizontalScroll(event: Event) {
-    const element = event.target as HTMLElement;
-    const scrollLeft = element.scrollLeft;
-    const scrollWidth = element.scrollWidth;
-    const clientWidth = element.clientWidth;
+    // Skip during initialization
+    if (this.isInitializing) return;
 
-    // Debounce scroll events
-    clearTimeout(this.scrollTimeout);
-    this.scrollTimeout = setTimeout(() => {
+    // Throttle: fire at most once per animation frame (not debounce)
+    if (this.scrollThrottleActive) return;
+    this.scrollThrottleActive = true;
+
+    requestAnimationFrame(() => {
+      this.scrollThrottleActive = false;
+
+      const element = event.target as HTMLElement;
+      const scrollLeft = element.scrollLeft;
+      const scrollWidth = element.scrollWidth;
+      const clientWidth = element.clientWidth;
+      const threshold = clientWidth; // Use full viewport width as threshold
+
       // Check if approaching left edge
-      if (scrollLeft < 200) {
-        this.expandDateRange('left');
+      if (scrollLeft < threshold) {
+        this.expandDateRange('left', element);
       }
 
       // Check if approaching right edge
-      if (scrollLeft > scrollWidth - clientWidth - 200) {
-        this.expandDateRange('right');
+      if (scrollLeft > scrollWidth - clientWidth - threshold) {
+        this.expandDateRange('right', element);
       }
-    }, 100);
+    });
   }
 
-  private expandDateRange(direction: 'left' | 'right') {
+  private expandDateRange(direction: 'left' | 'right', scrollElement: HTMLElement) {
     const current = this.visibleDateRange();
-    const monthsToExpand = 3; // Expand by 3 months at a time
+    const monthsToExpand = 3;
+    const columnWidth = this.columnWidth();
 
     if (direction === 'left') {
       const start = new Date(current.start);
       start.setMonth(start.getMonth() - monthsToExpand);
+
+      // Calculate the width of the new columns being prepended
+      const addedWidth = monthsToExpand * columnWidth;
+
       this.visibleDateRange.set({
         start,
         end: current.end
+      });
+
+      // Adjust scrollLeft to compensate for prepended columns
+      // This prevents the viewport from jumping when content is added on the left
+      requestAnimationFrame(() => {
+        scrollElement.scrollLeft += addedWidth;
       });
     } else {
       const end = new Date(current.end);
@@ -166,5 +230,13 @@ export class TimelineGridComponent implements OnInit, OnDestroy {
 
   trackByDate(_index: number, date: Date): number {
     return date.getTime();
+  }
+
+  onRowHover(index: number): void {
+    this.hoveredRowIndex.set(index);
+  }
+
+  onRowLeave(): void {
+    this.hoveredRowIndex.set(null);
   }
 }

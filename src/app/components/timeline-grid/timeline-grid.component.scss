@@ -66,7 +66,8 @@
   }
 }
 
-.work-center-row:hover {
+.work-center-row:hover,
+.work-center-row.hovered {
   background-color: $color-bg-hover-left;
   border-top: unset;
 }
@@ -123,7 +124,8 @@
   }
 }
 
-.grid-row:hover {
+.grid-row:hover,
+.grid-row.hovered {
   background-color: $color-bg-hover-right;
 }
 
@@ -134,6 +136,7 @@
   height: 100%;
 }
 
-.grid-row:hover .grid-cell {
+.grid-row:hover .grid-cell,
+.grid-row.hovered .grid-cell {
   background-color: $color-bg-hover-right;
 }
