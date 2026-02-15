@@ -1,0 +1,52 @@
+:host {
+  display: block;
+  width: 100%;
+  min-height: 100vh;
+  background-color: rgba(255, 255, 255, 1);
+}
+
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.page-header {
+  width: 100%;
+  height: 50px;
+  padding: 0 0 0 101px; /* Vertical padding handled by flex/height */
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  background-color: #ffffff; /* Explicitly white as per spec */
+}
+
+.header-logo {
+  width: 80px;
+height: 10px;
+
+}
+
+.page-body {
+  display: flex;
+  flex-direction: column;
+  padding-left: 101px;
+  flex-grow: 1; /* Fills remaining vertical space */
+}
+
+.page-title {
+  margin: 45px 0 0 0; /* 45px below header */
+  height: 34px;
+  color: rgba(3, 9, 41, 1);
+  font-family: 'Circular-Std';
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 34px;
+}
+
+.main-content {
+  margin-top: 24px; /* Gap below title */
+  flex-grow: 1;    /* Fills available space below the title */
+  display: flex;
+  flex-direction: column;
+}

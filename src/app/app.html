@@ -1,3 +1,4 @@
-<app-timeline-grid></app-timeline-grid>
-
-<router-outlet />
+<app-page-layout>
+  <app-timescale-dropdown (selectionChange)="onSelection($event)"></app-timescale-dropdown>
+  <app-timeline-grid></app-timeline-grid>
+</app-page-layout>

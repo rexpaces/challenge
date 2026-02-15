@@ -1,0 +1,27 @@
+<div class="timescale-wrapper">
+  <ng-select
+    [items]="options"
+    [(ngModel)]="selectedTimescale"
+    [searchable]="false"
+    [clearable]="false"
+    (change)="onChange($event)"
+    class="custom-timescale-select">
+
+    <ng-template ng-label-tmp let-item="item">
+      <div class="split-trigger">
+        <div class="label-part">Timescale</div>
+        <div class="value-part">
+          <span class="text">{{ item }}</span>
+          <img id="arrow" src="down.svg">
+        </div>
+      </div>
+    </ng-template>
+
+    <ng-template ng-option-tmp let-item="item" let-index="index">
+      <div class="custom-option" [class.is-selected]="item === selectedTimescale">
+        {{ item }}
+      </div>
+    </ng-template>
+
+  </ng-select>
+</div>

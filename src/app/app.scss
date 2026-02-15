@@ -2,6 +2,10 @@
   display: block;
   height: 100%;
   width: 100%;
+
+  app-timescale-dropdown {
+    margin-bottom: 24px;
+  }
 }
 
 app-timeline-grid {

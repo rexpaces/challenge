@@ -1,0 +1,113 @@
+// Define Variables for reuse
+$font-family: "Circular-Std";
+$text-secondary: #687196;
+$text-primary: #2F3059;
+$text-active: #3E40DB;
+
+.timescale-wrapper {
+  .custom-timescale-select {
+    width: 146px; // 75px (left) + 71px (right)
+
+    // Hide default ng-select styling
+    .ng-select-container {
+      background: transparent;
+      border: none;
+      min-height: 25px;
+      height: 25px;
+      padding: 0;
+
+      .ng-value-container {
+        padding: 0;
+        .ng-input { top: 0; padding: 0; }
+      }
+      .ng-arrow-wrapper { display: none; } // Using custom SVG instead
+    }
+
+    // Split Button Styling
+    .split-trigger {
+      display: flex;
+      height: 25px;
+      cursor: pointer;
+
+      .label-part {
+        width: 75px;
+        height: 25px;
+        background-color: #F1F3F8;
+        border-radius: 5px 0px 0px 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        // Typography
+        color: $text-secondary;
+        font-family: $font-family;
+        font-size: 13px;
+        font-weight: 500;
+        line-height: 16px;
+      }
+
+      .value-part {
+        width: 71px;
+        height: 25px;
+        background-color: #FFFFFF;
+        border-radius: 0px 5px 5px 0px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid rgba(104, 113, 150, 0.1); // subtle definition
+        border-left: none;
+
+        .text {
+          color: $text-active;
+          font-family: $font-family;
+          font-size: 13px;
+          margin-right: 6.53px;
+          font-weight: 600;
+        }
+
+      }
+    }
+
+    // Floating Dropdown Panel
+    .ng-dropdown-panel {
+      margin-top: 5px;
+      width: 200px !important;
+      background-color: rgba(255, 255, 255, 1);
+      border: 1px solid $text-secondary;
+      border-radius: 5px;
+      box-shadow:
+        0 0 0 1px rgba(104, 113, 150, 0.1),
+        0 2.5px 3px -1.5px rgba(200, 207, 233, 1),
+        0 4.5px 5px -1px rgba(216, 220, 235, 1);
+
+      .ng-dropdown-panel-items {
+        padding: 17px 0 17px 12px;
+        max-height: none; // Based on fixed 136px height requirement
+
+        .ng-option {
+          padding: 0;
+          height: 18px;
+          margin-bottom: 10px;
+          display: flex;
+          align-items: center;
+          background: none;
+
+          &:last-child { margin-bottom: 0; }
+
+          color: $text-primary;
+          font-family: $font-family;
+          font-size: 14px;
+          font-weight: 500;
+
+          &.ng-option-marked {
+            background: none; // Remove default hover gray
+          }
+
+          &.is-selected {
+            color: $text-active;
+          }
+        }
+      }
+    }
+  }
+}
