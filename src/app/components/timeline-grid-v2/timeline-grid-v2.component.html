@@ -1,0 +1,52 @@
+<div class="timeline-grid-container">
+  <!-- Header row: fixed left label + horizontally virtualized month headers -->
+  <div class="header-row">
+    <div class="left-header">Work Center</div>
+    <cdk-virtual-scroll-viewport
+      class="header-viewport"
+      orientation="horizontal"
+      [itemSize]="COLUMN_WIDTH"
+      #headerViewport
+    >
+      <div
+        class="date-column-header"
+        *cdkVirtualFor="let month of allMonths(); trackBy: trackByLabel"
+        [style.width.px]="COLUMN_WIDTH"
+      >
+        {{ month.label }}
+      </div>
+    </cdk-virtual-scroll-viewport>
+  </div>
+
+  <!-- Body: vertical virtual scroll + native horizontal scroll -->
+  <cdk-virtual-scroll-viewport
+    class="grid-viewport"
+    [itemSize]="ROW_HEIGHT"
+    #bodyViewport
+  >
+    <div
+      class="row"
+      *cdkVirtualFor="let wc of workCenters; trackBy: trackById"
+      [style.width.px]="LEFT_PANEL_WIDTH + TOTAL_CONTENT_WIDTH()"
+    >
+      <div class="work-center-cell">
+        {{ wc.name }}
+      </div>
+      <!-- CSS Grid track: no empty cell elements, grid lines via background -->
+      <div
+        class="grid-track"
+        [style.grid-template-columns]="gridTemplateColumns()"
+      >
+        <div
+          class="work-order-bar"
+          *ngFor="let positioned of getPositionedOrders(wc.id); trackBy: trackByPositionedOrder"
+          [style.grid-column]="positioned.position.gridColumnStart + ' / ' + positioned.position.gridColumnEnd"
+          [style.margin-left.px]="positioned.position.marginLeftPx"
+          [style.margin-right.px]="positioned.position.marginRightPx"
+        >
+          <span class="work-order-name">{{ positioned.order.name }}</span>
+        </div>
+      </div>
+    </div>
+  </cdk-virtual-scroll-viewport>
+</div>

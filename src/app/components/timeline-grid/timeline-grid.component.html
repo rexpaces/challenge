@@ -2,17 +2,36 @@
   <!-- Left Panel (Fixed) -->
   <div class="left-panel">
     <div class="left-panel-header">Work Center</div>
-    <div class="left-panel-content">
+
+    <!-- First row: fixed outside CDK viewport -->
+    @if (firstWorkCenter(); as first) {
+      <div
+        class="work-center-row first-row"
+        (mouseenter)="onRowHover(0)"
+        (mouseleave)="onRowLeave()"
+        [class.hovered]="hoveredRowIndices().has(0)"
+      >
+        {{ first.data.name }}
+      </div>
+    }
+
+    <!-- Remaining rows: CDK virtual scroll -->
+    <cdk-virtual-scroll-viewport
+      class="left-panel-content"
+      [itemSize]="ROW_HEIGHT"
+      #leftVirtualScroll
+      (scrolledIndexChange)="onLeftPanelScrolledIndexChange($event)"
+    >
       <div
         class="work-center-row"
-        *ngFor="let center of workCenters(); trackBy: trackByCenter; let i = index"
-        (mouseenter)="onRowHover(i)"
+        *cdkVirtualFor="let center of remainingWorkCenters(); trackBy: trackByCenter; let i = index"
+        (mouseenter)="onRowHover(i + 1)"
         (mouseleave)="onRowLeave()"
-        [class.hovered]="hoveredRowIndices().has(i)"
+        [class.hovered]="hoveredRowIndices().has(i + 1)"
       >
         {{ center.data.name }}
       </div>
-    </div>
+    </cdk-virtual-scroll-viewport>
   </div>
 
   <!-- Right Panel (Scrollable) -->
@@ -31,12 +50,29 @@
 
     <!-- Grid with Work Center Rows -->
     <div class="grid-content">
+      <!-- First row: fixed outside virtual scroll -->
+      @if (firstWorkCenter()) {
+        <div
+          class="grid-row first-row"
+          (mouseenter)="onRowHover(0)"
+          (mouseleave)="onRowLeave()"
+          [class.hovered]="hoveredRowIndices().has(0)"
+        >
+          <div
+            class="grid-cell"
+            *ngFor="let date of visibleDates(); trackBy: trackByDate"
+            [style.width.px]="columnWidth()"
+          ></div>
+        </div>
+      }
+
+      <!-- Remaining rows: synced with left panel CDK viewport -->
       <div
         class="grid-row"
-        *ngFor="let center of workCenters(); trackBy: trackByCenter; let i = index"
-        (mouseenter)="onRowHover(i)"
+        *ngFor="let center of visibleWorkCenters(); trackBy: trackByCenter; let i = index"
+        (mouseenter)="onRowHover(visibleStartIndex() + i + 1)"
         (mouseleave)="onRowLeave()"
-        [class.hovered]="hoveredRowIndices().has(i)"
+        [class.hovered]="hoveredRowIndices().has(visibleStartIndex() + i + 1)"
       >
         <div
           class="grid-cell"

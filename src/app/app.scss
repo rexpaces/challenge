@@ -8,8 +8,10 @@
   }
 }
 
-app-timeline-grid {
+app-timeline-grid,
+app-timeline-grid-v2 {
   display: block;
-  height: 100%;
+  flex: 1;
+  min-height: 0;
   width: 100%;
 }

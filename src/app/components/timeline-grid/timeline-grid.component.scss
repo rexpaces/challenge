@@ -10,17 +10,16 @@
 /* Left Panel */
 .left-panel {
   width: $left-panel-width;
-  min-height: $left-panel-min-height;
+  min-height: 0;
   flex-shrink: 0;
   border-right: $border-default;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
   background-color: $color-bg-white;
 }
 
 .left-panel-header {
-  // padding-top: $spacing-xs;
-  // padding-bottom: $spacing-sm;
   height: 32px;
   padding-left: $spacing-xl;
   display: flex;
@@ -33,14 +32,12 @@
   border-bottom: $border-default;
 }
 
-.left-panel-content {
+cdk-virtual-scroll-viewport.left-panel-content {
   flex: 1;
-  overflow-y: auto;
+  width: 100%;
 }
 
 .work-center-row {
-  // padding-top: 16px;
-  // padding-bottom: 16px;
   padding-left: 31px;
   display: flex;
   align-items: center;
@@ -58,7 +55,7 @@
     border-bottom: 1px solid #E6EBF0;
   }
 
-  &:first-child {
+  &.first-row {
     padding-top: 28px;
     border-top: unset;
     height: 60px;
@@ -89,11 +86,7 @@
 }
 
 .date-column-header {
-  // padding-top: 8px;
-  // padding-bottom: 8px;
   height: 32px;
-  // padding-left: 14px;
-  // padding-right: 13px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -104,7 +97,6 @@
   text-align: center;
   line-height: $line-height-default;
   flex-shrink: 0;
-  // border-right: $border-default;
   border-bottom: $border-default;
   background-color: $color-bg-white;
 }
@@ -116,10 +108,9 @@
 .grid-row {
   display: flex;
   height: 48px;
-  // border-bottom: $border-default;
   transition: $transition-default;
 
-  &:first-child {
+  &.first-row {
     height: 60px;
   }
 }
