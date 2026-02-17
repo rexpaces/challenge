@@ -15,7 +15,7 @@ import { FormsModule } from '@angular/forms';
 export class TimescaleDropdownComponent {
   @Output() selectionChange = new EventEmitter<string>();
 
-  options = ['Hour', 'Day', 'Week', 'Month'];
+  options = ['Day', 'Week', 'Month'];
   selectedTimescale = 'Month';
 
   onChange(value: string) {

@@ -10,10 +10,10 @@
     >
       <div
         class="date-column-header"
-        *cdkVirtualFor="let month of allMonths(); trackBy: trackByLabel"
+        *cdkVirtualFor="let unit of allTimeUnits(); trackBy: trackByLabel"
         [style.width.px]="COLUMN_WIDTH"
       >
-        {{ month.label }}
+        {{ unit.label }}
       </div>
     </cdk-virtual-scroll-viewport>
   </div>
@@ -26,11 +26,11 @@
   >
     <div
       class="row"
-      *cdkVirtualFor="let wc of workCenters; trackBy: trackById"
+      *cdkVirtualFor="let row of rows(); trackBy: trackById"
       [style.width.px]="LEFT_PANEL_WIDTH + TOTAL_CONTENT_WIDTH()"
     >
       <div class="work-center-cell">
-        {{ wc.name }}
+        {{ row.name }}
       </div>
       <!-- CSS Grid track: no empty cell elements, grid lines via background -->
       <div
@@ -39,7 +39,7 @@
       >
         <div
           class="work-order-bar"
-          *ngFor="let positioned of getPositionedOrders(wc.id); trackBy: trackByPositionedOrder"
+          *ngFor="let positioned of row.orders; trackBy: trackByPositionedOrder"
           [style.grid-column]="positioned.position.gridColumnStart + ' / ' + positioned.position.gridColumnEnd"
           [style.margin-left.px]="positioned.position.marginLeftPx"
           [style.margin-right.px]="positioned.position.marginRightPx"

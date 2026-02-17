@@ -44,7 +44,9 @@ cdk-virtual-scroll-viewport.header-viewport {
   flex: 1;
   height: 32px;
 
-  /* Hide scrollbar — scroll is driven by body viewport sync */
+  /* Scroll is driven by body viewport sync — disable user interaction */
+  pointer-events: none;
+  overflow: hidden;
   scrollbar-width: none;
   -ms-overflow-style: none;
 
@@ -119,7 +121,6 @@ cdk-virtual-scroll-viewport.grid-viewport {
   display: grid;
   height: 100%;
   align-items: center;
-  border-top: 1px solid $color-border-light;
 
   // Vertical grid lines via repeating background
   background-color: $color-bg-grid;
@@ -131,6 +132,8 @@ cdk-virtual-scroll-viewport.grid-viewport {
     $color-border-light #{$column-width-month}
   );
   background-size: #{$column-width-month} 100%;
+
+
 }
 
 .work-order-bar {

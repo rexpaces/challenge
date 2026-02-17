@@ -12,8 +12,12 @@ import { TimescaleDropdownComponent } from './components/timescale-dropdown/time
 })
 export class App {
   protected readonly title = signal('work-order');
+  protected readonly timescale = signal<'Day' | 'Week' | 'Month'>('Month');
 
   onSelection(event: string) {
-
+    // Filter out 'Hour' since it's not implemented yet
+    if (event === 'Day' || event === 'Week' || event === 'Month') {
+      this.timescale.set(event);
+    }
   }
 }

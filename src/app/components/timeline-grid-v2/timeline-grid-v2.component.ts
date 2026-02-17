@@ -8,6 +8,9 @@ import {
   NgZone,
   inject,
   OnDestroy,
+  input,
+  effect,
+  untracked,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ScrollingModule, CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
@@ -16,6 +19,13 @@ import { take } from 'rxjs';
 interface DateRange {
   start: Date;
   end: Date;
+}
+
+interface TimeUnit {
+  label: string;
+  start: Date;
+  end: Date;
+  type: 'day' | 'week' | 'month';
 }
 
 interface WorkOrder {
@@ -41,7 +51,7 @@ interface PositionedWorkOrder {
 const ROW_HEIGHT = 48;
 const COLUMN_WIDTH = 113;
 const LEFT_PANEL_WIDTH = 200;
-const TOTAL_ROWS = 1000;
+const TOTAL_ROWS = 10;
 const BUFFER_MONTHS = 24; // 2 years each direction from today
 
 @Component({
@@ -55,6 +65,9 @@ const BUFFER_MONTHS = 24; // 2 years each direction from today
 export class TimelineGridV2Component implements AfterViewInit, OnDestroy {
   @ViewChild('bodyViewport') bodyViewport!: CdkVirtualScrollViewport;
   @ViewChild('headerViewport') headerViewport!: CdkVirtualScrollViewport;
+
+  // Timescale input
+  timescale = input<'Day' | 'Week' | 'Month'>('Month');
 
   private zone = inject(NgZone);
 
@@ -159,66 +172,115 @@ export class TimelineGridV2Component implements AfterViewInit, OnDestroy {
   // Reactive date range — expanded as the user scrolls
   private visibleDateRange = signal<DateRange>({ start: new Date(), end: new Date() });
 
-  // Months derived from the reactive date range
-  allMonths = computed(() => {
+  // Time units derived from the reactive date range and timescale
+  allTimeUnits = computed(() => {
+    console.log('allTimeUnits');
     const range = this.visibleDateRange();
-    const months: { label: string; year: number; month: number }[] = [];
+    const timescale = this.timescale();
+    const units: TimeUnit[] = [];
 
-    let current = new Date(range.start);
-    current.setDate(1);
-    current.setHours(0, 0, 0, 0);
+    if (timescale === 'Month') {
+      let current = new Date(range.start);
+      current.setDate(1);
+      current.setHours(0, 0, 0, 0);
 
-    const names = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
-    ];
+      const names = [
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec',
+      ];
 
-    while (current <= range.end) {
-      months.push({
-        label: `${names[current.getMonth()]} ${current.getFullYear()}`,
-        year: current.getFullYear(),
-        month: current.getMonth(),
-      });
-      current.setMonth(current.getMonth() + 1);
+      while (current <= range.end) {
+        const monthStart = new Date(current);
+        const monthEnd = new Date(current.getFullYear(), current.getMonth() + 1, 0, 23, 59, 59, 999);
+
+        units.push({
+          label: `${names[current.getMonth()]} ${current.getFullYear()}`,
+          start: monthStart,
+          end: monthEnd,
+          type: 'month',
+        });
+        current.setMonth(current.getMonth() + 1);
+      }
+    } else if (timescale === 'Week') {
+      let current = new Date(range.start);
+      // Start from the beginning of the week (Sunday)
+      const day = current.getDay();
+      current.setDate(current.getDate() - day);
+      current.setHours(0, 0, 0, 0);
+
+      while (current <= range.end) {
+        const weekStart = new Date(current);
+        const weekEnd = new Date(current);
+        weekEnd.setDate(weekEnd.getDate() + 6);
+        weekEnd.setHours(23, 59, 59, 999);
+
+        const startStr = `${weekStart.getMonth() + 1}/${weekStart.getDate()}`;
+        const endStr = `${weekEnd.getMonth() + 1}/${weekEnd.getDate()}`;
+
+        units.push({
+          label: `${startStr}-${endStr}`,
+          start: weekStart,
+          end: weekEnd,
+          type: 'week',
+        });
+        current.setDate(current.getDate() + 7);
+      }
+    } else if (timescale === 'Day') {
+      let current = new Date(range.start);
+      current.setHours(0, 0, 0, 0);
+
+      while (current <= range.end) {
+        const dayStart = new Date(current);
+        const dayEnd = new Date(current);
+        dayEnd.setHours(23, 59, 59, 999);
+
+        const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+        units.push({
+          label: `${monthNames[current.getMonth()]} ${current.getDate()}`,
+          start: dayStart,
+          end: dayEnd,
+          type: 'day',
+        });
+        current.setDate(current.getDate() + 1);
+      }
     }
 
-    return months;
+    return units;
   });
 
-  totalMonths = computed(() => this.allMonths().length);
+  totalTimeUnits = computed(() => this.allTimeUnits().length);
 
   TOTAL_CONTENT_WIDTH = computed(() => {
-    return this.totalMonths() * COLUMN_WIDTH;
+    return this.totalTimeUnits() * COLUMN_WIDTH;
   });
 
   // Pre-computed grid-template-columns string
   gridTemplateColumns = computed(() => {
-    return `repeat(${this.totalMonths()}, ${COLUMN_WIDTH}px)`;
+    return `repeat(${this.totalTimeUnits()}, ${COLUMN_WIDTH}px)`;
   });
 
   // Pre-computed map: workCenterId -> PositionedWorkOrder[]
-  // Only includes orders that overlap the visible column range
+  // Only recomputes when allTimeUnits changes (timescale or date range change), not on scroll.
+  // Off-screen elements are handled by the browser's native paint optimization.
   workOrdersByCenter = computed(() => {
-    const months = this.allMonths();
-    const { start: visStart, end: visEnd } = this.visibleColumnRange();
+    console.log('workOrdersByCenter');
+    const timeUnits = this.allTimeUnits();
     const map = new Map<string, PositionedWorkOrder[]>();
 
     for (const wo of this.workOrders) {
-      const position = this.calculateGridPosition(wo, months);
+      const position = this.calculateGridPosition(wo, timeUnits);
       if (!position) continue;
-
-      // Skip bars entirely outside the visible viewport columns
-      if (position.gridColumnEnd <= visStart || position.gridColumnStart >= visEnd) continue;
 
       let list = map.get(wo.workCenterId);
       if (!list) {
@@ -231,10 +293,16 @@ export class TimelineGridV2Component implements AfterViewInit, OnDestroy {
     return map;
   });
 
-  // Visible column range (1-based CSS grid lines, with buffer) — drives work order filtering
-  private visibleColumnRange = signal({ start: 1, end: 1 });
-  private lastRangeStart = 0;
-  private lastRangeEnd = 0;
+  // Pre-computed rows: each work center paired with its positioned orders.
+  // CDK virtual scroll iterates this directly — no per-row lookups during CD.
+  readonly rows = computed(() => {
+    const ordersByCenter = this.workOrdersByCenter();
+    return this.workCenters.map(wc => ({
+      id: wc.id,
+      name: wc.name,
+      orders: ordersByCenter.get(wc.id) ?? [],
+    }));
+  });
 
   private scrollListener: (() => void) | null = null;
   private bodyEl: HTMLElement | null = null;
@@ -242,22 +310,66 @@ export class TimelineGridV2Component implements AfterViewInit, OnDestroy {
   private scrollThrottleActive = false;
   private isInitializing = true;
 
+  private previousTimescale: 'Day' | 'Week' | 'Month' = 'Month';
+
   constructor() {
     this.initializeVisibleRange();
+
+    // Reinitialize the visible range when timescale changes
+    effect(() => {
+      const newTimescale = this.timescale();
+      if (!this.isInitializing) {
+        // Compute the exact date at the scroll edge using the OLD timescale.
+        // visibleDateRange hasn't changed yet, and previousTimescale holds the old value.
+        const targetDate = this.getScrollEdgeDate();
+
+        this.initializeVisibleRange(targetDate);
+
+        // Scroll so the same date is the first visible column in the new timescale
+        requestAnimationFrame(() => {
+          this.scrollToDate(targetDate);
+        });
+      }
+      this.previousTimescale = newTimescale;
+    });
   }
 
-  private initializeVisibleRange() {
-    const today = new Date();
+  private initializeVisibleRange(centerDate?: Date) {
+    const anchor = centerDate ?? new Date();
+    const timescale = this.timescale();
 
-    const start = new Date(today);
-    start.setMonth(start.getMonth() - BUFFER_MONTHS);
-    start.setDate(1);
-    start.setHours(0, 0, 0, 0);
+    const start = new Date(anchor);
+    const end = new Date(anchor);
 
-    const end = new Date(today);
-    end.setMonth(end.getMonth() + BUFFER_MONTHS);
-    end.setDate(0);
-    end.setHours(23, 59, 59, 999);
+    if (timescale === 'Month') {
+      start.setMonth(start.getMonth() - BUFFER_MONTHS);
+      start.setDate(1);
+      start.setHours(0, 0, 0, 0);
+
+      end.setMonth(end.getMonth() + BUFFER_MONTHS);
+      end.setDate(0);
+      end.setHours(23, 59, 59, 999);
+    } else if (timescale === 'Week') {
+      // Buffer: ~6 months worth of weeks (26 weeks each direction)
+      start.setDate(start.getDate() - 26 * 7);
+      // Start from beginning of week (Sunday)
+      const startDay = start.getDay();
+      start.setDate(start.getDate() - startDay);
+      start.setHours(0, 0, 0, 0);
+
+      end.setDate(end.getDate() + 26 * 7);
+      // End at end of week (Saturday)
+      const endDay = end.getDay();
+      end.setDate(end.getDate() + (6 - endDay));
+      end.setHours(23, 59, 59, 999);
+    } else if (timescale === 'Day') {
+      // Buffer: ~6 months worth of days (180 days each direction)
+      start.setDate(start.getDate() - 180);
+      start.setHours(0, 0, 0, 0);
+
+      end.setDate(end.getDate() + 180);
+      end.setHours(23, 59, 59, 999);
+    }
 
     this.visibleDateRange.set({ start, end });
   }
@@ -279,8 +391,6 @@ export class TimelineGridV2Component implements AfterViewInit, OnDestroy {
       if (!this.isInitializing) {
         // Check for edge expansion (infinite scroll)
         this.onHorizontalScroll();
-        // Update visible column range for work order filtering
-        this.checkVisibleColumnRange();
       }
     };
 
@@ -291,15 +401,84 @@ export class TimelineGridV2Component implements AfterViewInit, OnDestroy {
     this.scrollToToday();
   }
 
+  /**
+   * Compute the exact date at the scrollLeft edge using the OLD timescale
+   * and the current (unchanged) visibleDateRange. Includes the sub-column
+   * fractional offset so the position maps precisely to the new timescale.
+   */
+  private getScrollEdgeDate(): Date {
+    const scrollLeft = this.bodyEl!.scrollLeft;
+    const colIdx = Math.floor(scrollLeft / COLUMN_WIDTH);
+    const fractionInCol = (scrollLeft - colIdx * COLUMN_WIDTH) / COLUMN_WIDTH;
+
+    const range = untracked(() => this.visibleDateRange());
+
+    // Compute start and end of the column at colIdx
+    let colStart: Date;
+    let colEnd: Date;
+
+    if (this.previousTimescale === 'Month') {
+      colStart = new Date(range.start);
+      colStart.setDate(1);
+      colStart.setHours(0, 0, 0, 0);
+      colStart.setMonth(colStart.getMonth() + colIdx);
+
+      colEnd = new Date(colStart);
+      colEnd.setMonth(colEnd.getMonth() + 1);
+    } else if (this.previousTimescale === 'Week') {
+      colStart = new Date(range.start);
+      colStart.setDate(colStart.getDate() - colStart.getDay());
+      colStart.setHours(0, 0, 0, 0);
+      colStart.setDate(colStart.getDate() + colIdx * 7);
+
+      colEnd = new Date(colStart);
+      colEnd.setDate(colEnd.getDate() + 7);
+    } else {
+      colStart = new Date(range.start);
+      colStart.setHours(0, 0, 0, 0);
+      colStart.setDate(colStart.getDate() + colIdx);
+
+      colEnd = new Date(colStart);
+      colEnd.setDate(colEnd.getDate() + 1);
+    }
+
+    // Interpolate within the column to get the exact date
+    const dateMs = colStart.getTime() + fractionInCol * (colEnd.getTime() - colStart.getTime());
+    return new Date(dateMs);
+  }
+
+  /** Scroll so that targetDate is at the left edge, with sub-column precision. */
+  private scrollToDate(targetDate: Date) {
+    const timeUnits = this.allTimeUnits();
+
+    // Find the time unit that contains the target date
+    const targetIndex = timeUnits.findIndex(
+      (unit) => targetDate >= unit.start && targetDate <= unit.end,
+    );
+    if (targetIndex < 0) return;
+
+    // Calculate sub-column offset within the target unit
+    const unit = timeUnits[targetIndex];
+    const unitDurationMs = unit.end.getTime() - unit.start.getTime();
+    const offsetFraction = (targetDate.getTime() - unit.start.getTime()) / unitDurationMs;
+
+    const scrollPos = (targetIndex + offsetFraction) * COLUMN_WIDTH;
+    this.bodyEl!.scrollLeft = scrollPos;
+    this.headerEl!.scrollLeft = scrollPos;
+  }
+
   private scrollToToday() {
     const today = new Date();
-    const months = this.allMonths();
-    const todayIndex = months.findIndex(
-      (m) => m.year === today.getFullYear() && m.month === today.getMonth(),
+    today.setHours(0, 0, 0, 0);
+    const timeUnits = this.allTimeUnits();
+
+    // Find the time unit that contains today
+    const todayIndex = timeUnits.findIndex(
+      (unit) => today >= unit.start && today <= unit.end,
     );
     if (todayIndex < 0) return;
 
-    // Show 1 month before today as the first visible column
+    // Show 1 unit before today as the first visible column
     const scrollPos = Math.max(0, (todayIndex - 1) * COLUMN_WIDTH);
 
     // Wait for CDK to render rows, then set scroll position
@@ -308,7 +487,7 @@ export class TimelineGridV2Component implements AfterViewInit, OnDestroy {
         this.bodyEl!.scrollLeft = scrollPos;
         this.headerEl!.scrollLeft = scrollPos;
         // Initialize visible column range so work orders render
-        this.syncVisibleColumnRange();
+
 
         requestAnimationFrame(() => {
           this.isInitializing = false;
@@ -335,85 +514,76 @@ export class TimelineGridV2Component implements AfterViewInit, OnDestroy {
     requestAnimationFrame(() => {
       this.zone.run(() => {
         this.scrollThrottleActive = false;
-        const monthsToExpand = 6;
+        const timescale = this.timescale();
+
+        // Determine expansion amount based on timescale
+        let unitsToExpand = 6;
+        if (timescale === 'Month') {
+          unitsToExpand = 6; // 6 months
+        } else if (timescale === 'Week') {
+          unitsToExpand = 12; // 12 weeks (~3 months)
+        } else if (timescale === 'Day') {
+          unitsToExpand = 60; // 60 days (~2 months)
+        }
 
         if (needsExpandLeft) {
           const current = this.visibleDateRange();
           const start = new Date(current.start);
-          start.setMonth(start.getMonth() - monthsToExpand);
+
+          if (timescale === 'Month') {
+            start.setMonth(start.getMonth() - unitsToExpand);
+          } else if (timescale === 'Week') {
+            start.setDate(start.getDate() - unitsToExpand * 7);
+          } else if (timescale === 'Day') {
+            start.setDate(start.getDate() - unitsToExpand);
+          }
 
           this.visibleDateRange.set({ start, end: current.end });
 
           // Compensate scroll so viewport stays in place
-          const addedWidth = monthsToExpand * COLUMN_WIDTH;
+          const addedWidth = unitsToExpand * COLUMN_WIDTH;
           this.bodyEl!.scrollLeft += addedWidth;
           this.headerEl!.scrollLeft = this.bodyEl!.scrollLeft;
           // Keep visible column range in sync for correct work order filtering
-          this.syncVisibleColumnRange();
+
         }
 
         if (needsExpandRight) {
           const current = this.visibleDateRange();
           const end = new Date(current.end);
-          end.setMonth(end.getMonth() + monthsToExpand);
-          end.setDate(0);
+
+          if (timescale === 'Month') {
+            end.setMonth(end.getMonth() + unitsToExpand);
+            end.setDate(0);
+          } else if (timescale === 'Week') {
+            end.setDate(end.getDate() + unitsToExpand * 7);
+          } else if (timescale === 'Day') {
+            end.setDate(end.getDate() + unitsToExpand);
+          }
 
           this.visibleDateRange.set({ start: current.start, end });
-          this.syncVisibleColumnRange();
+
         }
       });
     });
   }
 
-  /** Compute the visible column range from current scroll state. */
-  private computeVisibleColumnRange(): { start: number; end: number } {
-    const scrollLeft = this.bodyEl!.scrollLeft;
-    const clientWidth = this.bodyEl!.clientWidth;
-    const BUFFER = 5; // extra months each side
-    const firstCol = Math.max(1, Math.floor(scrollLeft / COLUMN_WIDTH) + 1 - BUFFER);
-    const lastCol = Math.ceil((scrollLeft + clientWidth) / COLUMN_WIDTH) + 1 + BUFFER;
-    return { start: firstCol, end: lastCol };
-  }
-
-  /** Called from scroll handler (outside zone). Only enters zone when range shifts by ≥2 columns. */
-  private checkVisibleColumnRange() {
-    const range = this.computeVisibleColumnRange();
-    if (
-      Math.abs(range.start - this.lastRangeStart) < 2 &&
-      Math.abs(range.end - this.lastRangeEnd) < 2
-    ) {
-      return;
-    }
-    this.lastRangeStart = range.start;
-    this.lastRangeEnd = range.end;
-    this.zone.run(() => {
-      this.visibleColumnRange.set(range);
-    });
-  }
-
-  /** Immediately sync the signal (called from expansion/init already inside zone). */
-  private syncVisibleColumnRange() {
-    const range = this.computeVisibleColumnRange();
-    this.lastRangeStart = range.start;
-    this.lastRangeEnd = range.end;
-    this.visibleColumnRange.set(range);
-  }
 
   // Calculate grid-column position for a work order
   private calculateGridPosition(
     wo: WorkOrder,
-    months: { year: number; month: number }[],
+    timeUnits: TimeUnit[],
   ): WorkOrderGridPosition | null {
-    if (months.length === 0) return null;
+    if (timeUnits.length === 0) return null;
 
-    // Find start month index
-    const startIdx = months.findIndex(
-      (m) => m.year === wo.startDate.getFullYear() && m.month === wo.startDate.getMonth(),
+    // Find start time unit index (unit that contains the start date)
+    const startIdx = timeUnits.findIndex(
+      (unit) => wo.startDate >= unit.start && wo.startDate <= unit.end,
     );
 
-    // Find end month index
-    const endIdx = months.findIndex(
-      (m) => m.year === wo.endDate.getFullYear() && m.month === wo.endDate.getMonth(),
+    // Find end time unit index (unit that contains the end date)
+    const endIdx = timeUnits.findIndex(
+      (unit) => wo.endDate >= unit.start && wo.endDate <= unit.end,
     );
 
     // Work order is entirely outside the visible range
@@ -421,25 +591,25 @@ export class TimelineGridV2Component implements AfterViewInit, OnDestroy {
 
     // Clamp indices if work order partially extends beyond range
     const clampedStartIdx = startIdx === -1 ? 0 : startIdx;
-    const clampedEndIdx = endIdx === -1 ? months.length - 1 : endIdx;
+    const clampedEndIdx = endIdx === -1 ? timeUnits.length - 1 : endIdx;
 
-    // Sub-month offset for start
-    const daysInStartMonth = new Date(
-      wo.startDate.getFullYear(),
-      wo.startDate.getMonth() + 1,
-      0,
-    ).getDate();
-    const marginLeftPx =
-      startIdx === -1 ? 0 : ((wo.startDate.getDate() - 1) / daysInStartMonth) * COLUMN_WIDTH;
+    // Calculate sub-unit offset for start
+    let marginLeftPx = 0;
+    if (startIdx !== -1) {
+      const startUnit = timeUnits[startIdx];
+      const unitDurationMs = startUnit.end.getTime() - startUnit.start.getTime();
+      const offsetMs = wo.startDate.getTime() - startUnit.start.getTime();
+      marginLeftPx = (offsetMs / unitDurationMs) * COLUMN_WIDTH;
+    }
 
-    // Sub-month offset for end
-    const daysInEndMonth = new Date(
-      wo.endDate.getFullYear(),
-      wo.endDate.getMonth() + 1,
-      0,
-    ).getDate();
-    const marginRightPx =
-      endIdx === -1 ? 0 : ((daysInEndMonth - wo.endDate.getDate()) / daysInEndMonth) * COLUMN_WIDTH;
+    // Calculate sub-unit offset for end
+    let marginRightPx = 0;
+    if (endIdx !== -1) {
+      const endUnit = timeUnits[endIdx];
+      const unitDurationMs = endUnit.end.getTime() - endUnit.start.getTime();
+      const offsetMs = endUnit.end.getTime() - wo.endDate.getTime();
+      marginRightPx = (offsetMs / unitDurationMs) * COLUMN_WIDTH;
+    }
 
     // CSS grid lines are 1-based; gridColumnEnd is exclusive
     const gridColumnStart = clampedStartIdx + 1;
@@ -457,11 +627,6 @@ export class TimelineGridV2Component implements AfterViewInit, OnDestroy {
       marginLeftPx: Math.round(marginLeftPx * 100) / 100,
       marginRightPx: Math.round(adjustedMarginRight * 100) / 100,
     };
-  }
-
-  // Template helper: simple map lookup
-  getPositionedOrders(workCenterId: string): PositionedWorkOrder[] {
-    return this.workOrdersByCenter().get(workCenterId) ?? [];
   }
 
   trackById(_index: number, item: { id: string }) {
