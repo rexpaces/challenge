@@ -26,7 +26,7 @@
   >
     <div
       class="row"
-      *cdkVirtualFor="let workCenter of workCenters(); trackBy: trackByWorkCenterId"
+      *cdkVirtualFor="let workCenter of workCenters(); let i = index; trackBy: trackByWorkCenterId"
       [style.width.px]="horizontalRowWidth()"
     >
       <div class="work-center-cell">
@@ -35,7 +35,26 @@
       <div
         class="grid-track"
         [style.grid-template-columns]="gridTemplateColumns()"
+        (boxClicked)="openWorkOrderPanel($event)"
       >
+        <!-- Current time vertical line (every row) -->
+        <div
+          *ngIf="currentTimeUnitColumn() > 0"
+          class="current-time-line"
+          [style.grid-row]="1"
+          [style.grid-column]="currentTimeUnitColumn()"
+        ></div>
+
+        <!-- Current time marker (first row only) -->
+        <div
+          *ngIf="i === 0 && currentTimeUnitColumn() > 0"
+          class="current-time-marker"
+          [style.grid-row]="1"
+          [style.grid-column]="currentTimeUnitColumn()"
+        >
+          {{ currentTimeUnitLabel() }}
+        </div>
+
         <app-work-order-bar
           *ngFor="let positioned of positionedOrdersByCenter().get(workCenter.docId); trackBy: trackByPositionedOrder"
           [name]="positioned.order.data.name"

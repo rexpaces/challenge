@@ -24,10 +24,13 @@ import { WorkCenterService, WorkCenterWithOrders } from '../../services/workcent
 import { WorkOrderDocument } from '../../../model';
 import { Subscription, take } from 'rxjs';
 import { WorkOrderBarComponent } from '../work-order-bar/work-order-bar.component';
+import { GridTrackHoverDirective } from './grid-track-hover.directive';
+import { WorkOrderPanelService } from '../../services/work-order-panel.service';
 
 const COLUMN_WIDTH = 113;
 const ROW_HEIGHT = 48;
-const LEFT_PANEL_WIDTH = 382;
+const DESKTOP_LEFT_PANEL_WIDTH = 382;
+const MOBILE_LEFT_PANEL_WIDTH = 230;
 
 export interface PositionedWorkOrder {
   order: WorkOrderDocument;
@@ -40,7 +43,7 @@ export interface PositionedWorkOrder {
 @Component({
   selector: 'app-timeline-grid-v3',
   standalone: true,
-  imports: [CommonModule, ScrollingModule, WorkOrderBarComponent],
+  imports: [CommonModule, ScrollingModule, WorkOrderBarComponent, GridTrackHoverDirective],
   templateUrl: './timeline-grid-v3.component.html',
   styleUrl: './timeline-grid-v3.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -54,8 +57,9 @@ export class TimelineGridV3Component implements AfterViewInit, OnDestroy {
 
   readonly COLUMN_WIDTH = COLUMN_WIDTH;
   readonly ROW_HEIGHT = ROW_HEIGHT;
-  readonly LEFT_PANEL_WIDTH = LEFT_PANEL_WIDTH;
+
   private workCenterService = inject(WorkCenterService);
+  private workOrderPanelService = inject(WorkOrderPanelService);
   private isInitializing = true;
   private previousTimescale = TIME_SCALES.MONTH;
   private currentDateRange!: DateRange;
@@ -68,7 +72,20 @@ export class TimelineGridV3Component implements AfterViewInit, OnDestroy {
   private bodyEl: HTMLElement | null = null;
   private zone = inject(NgZone);
   private scrollListener: (() => void) | null = null;
+  private resizeListener: (() => void) | null = null;
   private rangeSubscription: Subscription | null = null;
+
+  // Track window width for responsive left panel width
+  private windowWidth = signal(typeof window !== 'undefined' ? window.innerWidth : 1024);
+
+  leftPanelWidth = computed(() => {
+    this.windowWidth(); // Track changes
+    return typeof window !== 'undefined' && window.innerWidth <= 768
+      ? MOBILE_LEFT_PANEL_WIDTH
+      : DESKTOP_LEFT_PANEL_WIDTH;
+  });
+
+  readonly LEFT_PANEL_WIDTH = computed(() => this.leftPanelWidth());
 
   private _renderedRange = signal<{ start: number; end: number }>({ start: 0, end: 0 });
 
@@ -148,7 +165,29 @@ export class TimelineGridV3Component implements AfterViewInit, OnDestroy {
 
   gridTemplateColumns = computed(() => `repeat(${this.totalTimeUnits()}, ${COLUMN_WIDTH}px)`);
 
-  horizontalRowWidth = computed(() => this.LEFT_PANEL_WIDTH + this.totalContentWidth());
+  horizontalRowWidth = computed(() => this.leftPanelWidth() + this.totalContentWidth());
+
+  /** 1-based CSS grid column of the time unit that contains "now", or -1 */
+  currentTimeUnitColumn = computed(() => {
+    console.log('currentTimeUnitColumn');
+    const units = this.timeUnits();
+    const now = new Date();
+    const idx = units.findIndex((u) => now >= u.start && now <= u.end);
+    return idx >= 0 ? idx + 1 : -1;
+  });
+
+  /** Label for the current-time marker */
+  currentTimeUnitLabel = computed(() => {
+    console.log('currentTimeUnitLabel');
+    const col = this.currentTimeUnitColumn();
+    if (col === -1) return '';
+    const unit = this.timeUnits()[col - 1];
+    switch (unit.type) {
+      case 'month': return 'Current month';
+      case 'week':  return 'Current week';
+      case 'day':   return 'Current day';
+    }
+  });
 
   ngAfterViewInit() {
     this.bodyEl = this.bodyViewport.elementRef.nativeElement;
@@ -171,6 +210,12 @@ export class TimelineGridV3Component implements AfterViewInit, OnDestroy {
         }
       };
       this.bodyEl!.addEventListener('scroll', this.scrollListener, { passive: true });
+
+      // Listen for window resize to update responsive left panel width
+      this.resizeListener = () => {
+        this.windowWidth.set(window.innerWidth);
+      };
+      window.addEventListener('resize', this.resizeListener);
     });
 
     this.rangeSubscription = this.bodyViewport.renderedRangeStream.subscribe((range) => {
@@ -183,6 +228,9 @@ export class TimelineGridV3Component implements AfterViewInit, OnDestroy {
   ngOnDestroy() {
     if (this.scrollListener && this.bodyEl) {
       this.bodyEl.removeEventListener('scroll', this.scrollListener);
+    }
+    if (this.resizeListener) {
+      window.removeEventListener('resize', this.resizeListener);
     }
     this.rangeSubscription?.unsubscribe();
   }
@@ -197,6 +245,13 @@ export class TimelineGridV3Component implements AfterViewInit, OnDestroy {
 
   trackByPositionedOrder(_index: number, item: PositionedWorkOrder) {
     return item.order.docId;
+  }
+
+  openWorkOrderPanel(context: { x: number; timeUnitIndex: number }) {
+    console.log('Opening panel for time unit index:', context.timeUnitIndex);
+    const timeUnit = this.timeUnits()[context.timeUnitIndex];
+    console.log('Time unit:', timeUnit);
+    this.workOrderPanelService.open();
   }
 
   private computePosition(

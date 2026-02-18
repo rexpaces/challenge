@@ -4,6 +4,7 @@
   display: block;
   height: 100%;
   width: 100%;
+  --left-panel-width: 382px;
 }
 
 .timeline-grid-container {
@@ -23,8 +24,8 @@
 
 .left-header {
   z-index: 2;
-  width: $left-panel-width;
-  min-width: $left-panel-width;
+  width: var(--left-panel-width);
+  min-width: var(--left-panel-width);
   height: 32px;
   padding-left: $spacing-xl;
   display: flex;
@@ -76,6 +77,37 @@ cdk-virtual-scroll-viewport.header-viewport {
   background-color: $color-bg-white;
 }
 
+/* Current time vertical line — rendered in every row's grid-track */
+.current-time-line {
+  width: 3px;
+  align-self: stretch;
+  background-color: rgba(212, 215, 255, 1);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.row:hover .current-time-line {
+  opacity: 0;
+}
+
+/* Current time unit marker — rendered inside the first row's grid-track */
+.current-time-marker {
+  align-self: start;
+  width: 109px;
+  height: 22px;
+  border-radius: 5px;
+  background-color: rgba(212, 215, 255, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: $font-family-default;
+  font-size: 11px;
+  font-weight: 500;
+  color: $color-dark-blue;
+  z-index: 2;
+  pointer-events: none;
+}
+
 /* ── Single Viewport ── */
 cdk-virtual-scroll-viewport.grid-viewport {
   flex: 1;
@@ -99,9 +131,9 @@ cdk-virtual-scroll-viewport.grid-viewport {
 .work-center-cell {
   position: sticky;
   left: 0;
-  z-index: 2;
-  width: $left-panel-width;
-  min-width: $left-panel-width;
+  z-index: 3;
+  width: var(--left-panel-width);
+  min-width: var(--left-panel-width);
   flex-shrink: 0;
   padding-left: $spacing-xl;
   display: flex;
@@ -151,10 +183,17 @@ cdk-virtual-scroll-viewport.grid-viewport ::ng-deep .cdk-virtual-scroll-content-
     position: sticky;
     flex-grow: 1;
     content: '';
-    width: $left-panel-width;
+    width: var(--left-panel-width);
     border-right: $border-default;
     background-color: $color-bg-white;
     left: 0;
     z-index: 2;
+  }
+}
+
+/* Phone and tablet responsive styles */
+@media (max-width: 768px) {
+  :host {
+    --left-panel-width: 230px;
   }
 }

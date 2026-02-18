@@ -1,0 +1,76 @@
+<!-- Panel wrapper (always in DOM, shown/hidden via class) -->
+<div class="panel-wrapper" [class.open]="isOpen()">
+  <!-- Overlay (clickable to close) -->
+  <div class="overlay" (click)="close()"></div>
+
+  <!-- Side Panel -->
+  <div class="work-order-panel" [class.open]="isOpen()">
+    <!-- Header -->
+    <div class="panel-header">
+      <div class="header-content">
+        <div class="header-left">
+          <div class="panel-title">Work Order Details</div>
+          <div class="panel-subtitle">Specify the dates, name and status for this order</div>
+        </div>
+        <div class="header-buttons">
+          <button class="btn btn-cancel" (click)="close()">Cancel</button>
+          <button class="btn btn-create">Create</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel body -->
+    <div class="panel-body">
+      <form class="panel-form">
+
+        <!-- Work Order Name -->
+        <div class="form-field">
+          <label class="field-label">Work Order Name</label>
+          <input
+            type="text"
+            class="text-input"
+            placeholder="Enter work order name"
+          />
+        </div>
+
+        <!-- Status -->
+        <div class="form-field">
+          <label class="field-label">Status</label>
+          <ng-select
+            class="status-select"
+            [items]="statusOptions"
+            bindValue="value"
+            bindLabel="label"
+            placeholder="Select status"
+            [clearable]="false"
+            [searchable]="false"
+          >
+            <ng-template ng-option-tmp let-item="item">
+              {{ item.label }}
+            </ng-template>
+            <ng-template ng-label-tmp let-item="item">
+              <span class="status-pill" [ngClass]="'pill-' + item.value">{{ item.label }}</span>
+            </ng-template>
+          </ng-select>
+        </div>
+
+        <!-- Date row -->
+        <div class="form-row">
+          <div class="form-field">
+            <label class="field-label">Start Date</label>
+            <div class="date-input-wrapper">
+              <input type="date" class="date-input" />
+            </div>
+          </div>
+          <div class="form-field">
+            <label class="field-label">End Date</label>
+            <div class="date-input-wrapper">
+              <input type="date" class="date-input" />
+            </div>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
