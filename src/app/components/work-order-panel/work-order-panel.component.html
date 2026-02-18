@@ -73,7 +73,7 @@
           </div>
         }
 
-        <!-- Date row -->
+        <!-- Start Date & Time row -->
         <div class="form-row">
           <div class="form-field">
             <label class="field-label">Start Date</label>
@@ -90,6 +90,24 @@
             }
           </div>
           <div class="form-field">
+            <label class="field-label">Start Time</label>
+            <div class="date-input-wrapper">
+              <input
+                type="time"
+                class="date-input"
+                [class.input-error]="startTimeControl.invalid && startTimeControl.touched"
+                formControlName="startTime"
+              />
+            </div>
+            @if (startTimeControl.invalid && startTimeControl.touched) {
+              <span class="error-message">Start time is required.</span>
+            }
+          </div>
+        </div>
+
+        <!-- End Date & Time row -->
+        <div class="form-row">
+          <div class="form-field">
             <label class="field-label">End Date</label>
             <div class="date-input-wrapper">
               <input
@@ -102,8 +120,19 @@
             @if (endDateControl.invalid && endDateControl.touched) {
               <span class="error-message">End date is required.</span>
             }
-            @if (form.errors?.['endDateBeforeStartDate'] && endDateControl.touched) {
-              <span class="error-message">End date must be later than the start date.</span>
+          </div>
+          <div class="form-field">
+            <label class="field-label">End Time</label>
+            <div class="date-input-wrapper">
+              <input
+                type="time"
+                class="date-input"
+                [class.input-error]="(endTimeControl.invalid && endTimeControl.touched) || (form.errors?.['endDateBeforeStartDate'] && endTimeControl.touched)"
+                formControlName="endTime"
+              />
+            </div>
+            @if (form.errors?.['endDateBeforeStartDate'] && (endDateControl.touched || endTimeControl.touched)) {
+              <span class="error-message">End must be later than start.</span>
             }
           </div>
         </div>

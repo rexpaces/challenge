@@ -39,7 +39,9 @@ export class WorkOrderPanelComponent {
       name: ['', Validators.required],
       status: ['open' as string, Validators.required],
       startDate: ['', Validators.required],
+      startTime: ['08:00', Validators.required],
       endDate: ['', Validators.required],
+      endTime: ['17:00', Validators.required],
     },
     {
       validators: endDateAfterStartDate(),
@@ -52,7 +54,9 @@ export class WorkOrderPanelComponent {
   get nameControl() { return this.form.controls.name; }
   get statusControl() { return this.form.controls.status; }
   get startDateControl() { return this.form.controls.startDate; }
+  get startTimeControl() { return this.form.controls.startTime; }
   get endDateControl() { return this.form.controls.endDate; }
+  get endTimeControl() { return this.form.controls.endTime; }
 
   open(workCenter: WorkCenterWithOrders, startDate?: Date) {
     const start = startDate ?? new Date();
@@ -65,7 +69,9 @@ export class WorkOrderPanelComponent {
       name: '',
       status: 'open',
       startDate: this.toDateInputValue(start),
+      startTime: this.toTimeInputValue(start),
       endDate: this.toDateInputValue(end),
+      endTime: this.toTimeInputValue(end),
     });
     this.isEditMode.set(false);
     this.isOpen.set(true);
@@ -74,11 +80,16 @@ export class WorkOrderPanelComponent {
   openForEdit(workCenter: WorkCenterWithOrders, data: WorkOrderDocument) {
     this.overlapContext = { workCenterId: data.data.workCenterId, excludeDocId: data.docId };
 
+    const startDt = new Date(data.data.startDate);
+    const endDt = new Date(data.data.endDate);
+
     this.form.reset({
       name: data.data.name,
       status: data.data.status,
-      startDate: data.data.startDate.substring(0, 10),
-      endDate: data.data.endDate.substring(0, 10),
+      startDate: this.toDateInputValue(startDt),
+      startTime: this.toTimeInputValue(startDt),
+      endDate: this.toDateInputValue(endDt),
+      endTime: this.toTimeInputValue(endDt),
     });
     this.isEditMode.set(true);
     this.isOpen.set(true);
@@ -102,8 +113,8 @@ export class WorkOrderPanelComponent {
       name: v.name!,
       workCenterId,
       status: v.status as WorkOrderStatus,
-      startDate: new Date(v.startDate!).toISOString(),
-      endDate: new Date(v.endDate!).toISOString(),
+      startDate: this.combineDateAndTime(v.startDate!, v.startTime!),
+      endDate: this.combineDateAndTime(v.endDate!, v.endTime!),
     };
 
     if (this.isEditMode() && excludeDocId) {
@@ -129,6 +140,19 @@ export class WorkOrderPanelComponent {
   }
 
   private toDateInputValue(date: Date): string {
-    return date.toISOString().substring(0, 10);
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const d = String(date.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+  }
+
+  private toTimeInputValue(date: Date): string {
+    const h = String(date.getHours()).padStart(2, '0');
+    const m = String(date.getMinutes()).padStart(2, '0');
+    return `${h}:${m}`;
+  }
+
+  private combineDateAndTime(date: string, time: string): string {
+    return new Date(`${date}T${time}:00`).toISOString();
   }
 }

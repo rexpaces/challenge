@@ -4,11 +4,13 @@ import { endDateAfterStartDate } from './work-order-panel.validators';
 // ── endDateAfterStartDate ───────────────────────────────────────────────────
 
 describe('endDateAfterStartDate', () => {
-  function buildGroup(startDate: string | null, endDate: string | null): FormGroup {
+  function buildGroup(startDate: string | null, endDate: string | null, startTime = '08:00', endTime = '17:00'): FormGroup {
     return new FormGroup(
       {
         startDate: new FormControl(startDate),
+        startTime: new FormControl(startTime),
         endDate: new FormControl(endDate),
+        endTime: new FormControl(endTime),
       },
       { validators: endDateAfterStartDate() },
     );
@@ -19,9 +21,14 @@ describe('endDateAfterStartDate', () => {
     expect(group.errors).toBeNull();
   });
 
-  it('returns error when endDate equals startDate', () => {
-    const group = buildGroup('2025-01-01', '2025-01-01');
+  it('returns error when endDate equals startDate and endTime equals startTime', () => {
+    const group = buildGroup('2025-01-01', '2025-01-01', '08:00', '08:00');
     expect(group.errors).toEqual({ endDateBeforeStartDate: true });
+  });
+
+  it('returns null when same date but endTime is after startTime', () => {
+    const group = buildGroup('2025-01-01', '2025-01-01', '08:00', '17:00');
+    expect(group.errors).toBeNull();
   });
 
   it('returns error when endDate is before startDate', () => {

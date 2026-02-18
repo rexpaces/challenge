@@ -11,11 +11,13 @@ export const OVERLAP_DEBOUNCE_MS = 400;
 export function endDateAfterStartDate(): ValidatorFn {
   return (group: AbstractControl): ValidationErrors | null => {
     const startDate = group.get('startDate')?.value;
+    const startTime = group.get('startTime')?.value ?? '00:00';
     const endDate = group.get('endDate')?.value;
+    const endTime = group.get('endTime')?.value ?? '00:00';
 
     if (!startDate || !endDate) return null;
 
-    return new Date(endDate) > new Date(startDate)
+    return new Date(`${endDate}T${endTime}:00`) > new Date(`${startDate}T${startTime}:00`)
       ? null
       : { endDateBeforeStartDate: true };
   };
@@ -37,11 +39,16 @@ export function overlapValidator(
 ): AsyncValidatorFn {
   return (group: AbstractControl): Observable<ValidationErrors | null> => {
     const startDate = group.get('startDate')?.value;
+    const startTime = group.get('startTime')?.value ?? '00:00';
     const endDate = group.get('endDate')?.value;
+    const endTime = group.get('endTime')?.value ?? '00:00';
     if (!startDate || !endDate) return of(null);
 
+    const startISO = new Date(`${startDate}T${startTime}:00`).toISOString();
+    const endISO = new Date(`${endDate}T${endTime}:00`).toISOString();
+
     return timer(OVERLAP_DEBOUNCE_MS).pipe(
-      switchMap(() => checkFn(startDate, endDate)),
+      switchMap(() => checkFn(startISO, endISO)),
     );
   };
 }
