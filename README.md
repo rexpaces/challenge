@@ -1,59 +1,70 @@
-# WorkOrder
+# Timeline Scheduler Challenge
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.3.
+This project is a high-performance timeline/grid scheduling application built with the latest version of **Angular**. It focuses on rendering realistic work centers and orders efficiently across a time-based axis.
 
-## Development server
 
-To start a local development server, run:
+---
 
-```bash
-ng serve
-```
+## 📝 Summary
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+This challenge was an opportunity to dive deep into the latest Angular features. A significant portion of the development time was dedicated to the **Timeline Grid**. After three iterations, the final version strikes a balance between **clean code** and **high-performance rendering**. 
 
-## Code scaffolding
+The current solution is flexible: although full horizontal infinite scroll is pending, users can traverse any date range by switching timescales, which recomputes the grid based on the visible date range.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
 
-```bash
-ng generate component component-name
-```
+---
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## 📂 Project Structure
 
-```bash
-ng generate --help
-```
+The repository is organized as follows:
 
-## Building
+* **`/` (Root):** The main Angular workspace and application.
+* **`/src`:** The Angular codebase, featuring the timeline grid logic.
+* **`/public`:** Contains two JSON data samples used for initial state.
+* **`/data-generator`:** A Node.js CLI tool built to generate realistic work center and order datasets using **Ollama**.
 
-To build the project run:
+---
 
-```bash
-ng build
-```
+## 🛠 Development Process & History
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+This project evolved through several architectural iterations to balance performance with maintainability:
 
-## Running unit tests
+1.  **Data Strategy:** Reviewed data structures and built a custom generator to create varied datasets for stress testing.
+2.  **Architectural Research:** Investigated grid rendering strategies for large datasets and infinite loading.
+3.  **Iteration 1:** Used `CDK Virtual Scroll` for vertical work centers and a custom `*ngFor` horizontal scroll. The UI was split into two separate panels (Left/Right).
+4.  **Iteration 2 (Optimization):** Merged the two-panel system into a single `CDK Virtual Scroll` to reduce the number of `*ngFor` directives and improve synchronization.
+5.  **Iteration 3 (CSS Grid):** Replaced manual data grid cell rendering with a **CSS Grid** approach to significantly reduce the DOM node count.
+6.  **Final POC:** Refactored the timeline grid into a simplified, date-range-driven component. While horizontal infinite scroll was temporarily removed for complexity, the current architecture supports easy re-implementation via `timeUnits` computation.
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+---
 
-```bash
-ng test
-```
+## 🚀 Performance & Technical Highlights
 
-## Running end-to-end tests
+* **Change Detection:** Uses `OnPush` strategy across the board.
+* **Rendering:** Optimized with `trackBy` functions.
+* **Stress Testing:** Maintains smooth performance even with a **20x CPU slowdown** and thousands of DOM nodes.
+* **AI Collaboration:** Leveraged **Claude Code** for POC generation and boilerplate, with manual refactoring for complex logic and the final timeline architecture.
 
-For end-to-end (e2e) testing, run:
+---
 
-```bash
-ng e2e
-```
+## ✅ Features & Status
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+### Core Functionality (Done)
+* **Timeline Grid:** High-performance rendering of work centers and time-based orders.
+* **Order Management:** * Work order bar components.
+    * Reactive forms for order creation with custom validations.
+    * Full integration of creation/update logic with the grid.
+* **Visual Aids:** Current date markers and time-line indicators.
+* **Testing:** Unit tests for main components and validators.
 
-## Additional Resources
+### Bonus Points
+| Feature | Status | Notes |
+| :--- | :--- | :--- |
+| **Unit Tests** | ✅ Done | Main components and validators covered. |
+| **Performance** | ✅ Done | Optimized for low-end hardware. |
+| **Tooltips** | ✅ Done  | On bar hover |
+| **Infinite Scroll** | ⚠️ Partial | Vertical is functional; horizontal is date-traversable. | easy to implement in the next iteration
+| **Keyboard Nav** | ❌ Not Done | Planned for future release. |
+| **"Today" Button** | ❌ Not Done | - |
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+| **Local Storage** | ❌ Not Done | Persistence not yet implemented. |

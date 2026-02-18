@@ -131,6 +131,15 @@ export class TimelineGridV3Component implements AfterViewInit, OnDestroy {
     this._timeUnits.set(getTimeUnits(TIME_SCALES.MONTH, this.currentDateRange));
 
     effect(() => {
+      const saved = this.workCenterService.lastSavedWorkOrder();
+      if (!saved || !this.bodyEl) return;
+
+      const startDate = new Date(saved.data.startDate);
+      this.scrollerPositionAtDate = startDate;
+      this.scrollToDate(startDate, this.timeUnits());
+    });
+
+    effect(() => {
       const newTimescale = this.timescale();
 
       // Rotate bookkeeping: current → previous
@@ -247,11 +256,17 @@ export class TimelineGridV3Component implements AfterViewInit, OnDestroy {
     return item.order.docId;
   }
 
-  openWorkOrderPanel(context: { x: number; timeUnitIndex: number }) {
-    console.log('Opening panel for time unit index:', context.timeUnitIndex);
+  openWorkOrderPanel(context: { x: number; timeUnitIndex: number }, workCenter: WorkCenterWithOrders) {
     const timeUnit = this.timeUnits()[context.timeUnitIndex];
-    console.log('Time unit:', timeUnit);
-    this.workOrderPanelService.open();
+    this.workOrderPanelService.open(workCenter, timeUnit?.start);
+  }
+
+  onEditWorkOrder(order: WorkOrderDocument, workCenter: WorkCenterWithOrders) {
+    this.workOrderPanelService.openForEdit(workCenter, order);
+  }
+
+  onDeleteWorkOrder(order: WorkOrderDocument) {
+    this.workCenterService.deleteWorkOrder(order.docId);
   }
 
   private computePosition(

@@ -63,6 +63,109 @@
   border-radius: 50%;
 }
 
+/* ── Dots-btn menu ── */
+
+.bar-menu {
+  width: 200px;
+  height: 80px;
+  box-shadow: 0 0 0 1px rgba(104, 113, 150, 0.1),
+    0 2.5px 3px -1.5px rgba(200, 207, 233, 1),
+    0 4.5px 5px -1px rgba(216, 220, 235, 1);
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 1);
+  padding-top: 12px;
+  padding-bottom: 12px;
+  padding-left: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 14px;
+}
+
+.menu-item {
+  display: block;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+  font-family: 'Circular-Std';
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 18px;
+
+  &:hover {
+    opacity: 0.75;
+  }
+}
+
+.menu-edit {
+  width: 150px;
+  height: 18px;
+  color: rgba(47, 48, 89, 1);
+}
+
+.menu-delete {
+  color: rgba(62, 64, 219, 1);
+}
+
+/* ── Tooltip ── */
+
+.wo-tooltip {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 200px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 1);
+  box-shadow:
+    0 0 0 1px rgba(104, 113, 150, 0.12),
+    0 4px 12px rgba(0, 0, 0, 0.12);
+  pointer-events: none;
+}
+
+.tooltip-name {
+  font-family: 'Circular-Std';
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 16px;
+  color: rgba(3, 9, 41, 1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tooltip-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tooltip-label {
+  font-family: 'Circular-Std';
+  font-size: 12px;
+  font-weight: 400;
+  color: rgba(104, 113, 150, 1);
+  min-width: 38px;
+}
+
+.tooltip-value {
+  font-family: 'Circular-Std';
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(3, 9, 41, 1);
+}
+
+.tooltip-pill {
+  border-radius: 5px;
+  padding: 1px 7px;
+  font-size: 12px;
+  font-weight: 400;
+  font-family: 'Circular-Std';
+  line-height: 16px;
+}
+
 /* ── Status: in-progress ── */
 .status-in-progress {
   background-color: rgba(237, 238, 255, 1);

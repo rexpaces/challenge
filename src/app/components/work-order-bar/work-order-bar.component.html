@@ -1,9 +1,39 @@
-<div class="bar" [ngClass]="'status-' + status()">
+<div
+  class="bar"
+  [ngClass]="'status-' + status()"
+  (mouseenter)="showTooltip()"
+  (mouseleave)="hideTooltip()"
+>
   <span class="name">{{ name() }}</span>
   <span class="pill" [ngClass]="'pill-' + status()">{{ status() }}</span>
-  <div class="dots-btn">
+  <div class="dots-btn" (click)="toggleMenu($event)">
     <span class="dot"></span>
     <span class="dot"></span>
     <span class="dot"></span>
   </div>
 </div>
+
+<ng-template #menuTemplate>
+  <div class="bar-menu" (click)="$event.stopPropagation()">
+    <button class="menu-item menu-edit" (click)="onEdit()">Edit</button>
+    <button class="menu-item menu-delete" (click)="onDelete()">Delete</button>
+  </div>
+</ng-template>
+
+<ng-template #tooltipTemplate>
+  <div class="wo-tooltip">
+    <span class="tooltip-name">{{ workOrder().data.name }}</span>
+    <div class="tooltip-row">
+      <span class="tooltip-label">Status</span>
+      <span class="tooltip-pill" [ngClass]="'pill-' + status()">{{ status() }}</span>
+    </div>
+    <div class="tooltip-row">
+      <span class="tooltip-label">Start</span>
+      <span class="tooltip-value">{{ formatDate(workOrder().data.startDate) }}</span>
+    </div>
+    <div class="tooltip-row">
+      <span class="tooltip-label">End</span>
+      <span class="tooltip-value">{{ formatDate(workOrder().data.endDate) }}</span>
+    </div>
+  </div>
+</ng-template>

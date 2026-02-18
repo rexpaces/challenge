@@ -1,4 +1,6 @@
 import { Injectable, signal } from '@angular/core';
+import { WorkOrderDocument } from '../../model';
+import { WorkCenterWithOrders } from './workcenters.service';
 import { WorkOrderPanelComponent } from '../components/work-order-panel/work-order-panel.component';
 
 @Injectable({ providedIn: 'root' })
@@ -13,8 +15,12 @@ export class WorkOrderPanelService {
     return this.panelInstance();
   }
 
-  open() {
-    this.panelInstance()?.open();
+  open(workCenter: WorkCenterWithOrders, startDate?: Date) {
+    this.panelInstance()?.open(workCenter, startDate);
+  }
+
+  openForEdit(workCenter: WorkCenterWithOrders, data: WorkOrderDocument) {
+    this.panelInstance()?.openForEdit(workCenter, data);
   }
 
   close() {

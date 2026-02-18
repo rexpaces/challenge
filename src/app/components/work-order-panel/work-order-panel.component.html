@@ -13,15 +13,17 @@
           <div class="panel-subtitle">Specify the dates, name and status for this order</div>
         </div>
         <div class="header-buttons">
-          <button class="btn btn-cancel" (click)="close()">Cancel</button>
-          <button class="btn btn-create">Create</button>
+          <button class="btn btn-cancel" type="button" (click)="close()">Cancel</button>
+          <button class="btn btn-create" type="button" (click)="onSubmit()">
+            {{ isEditMode() ? 'Save' : 'Create' }}
+          </button>
         </div>
       </div>
     </div>
 
     <!-- Panel body -->
     <div class="panel-body">
-      <form class="panel-form">
+      <form class="panel-form" [formGroup]="form" (ngSubmit)="onSubmit()">
 
         <!-- Work Order Name -->
         <div class="form-field">
@@ -29,8 +31,13 @@
           <input
             type="text"
             class="text-input"
+            [class.input-error]="nameControl.invalid && nameControl.touched"
             placeholder="Enter work order name"
+            formControlName="name"
           />
+          @if (nameControl.invalid && nameControl.touched) {
+            <span class="error-message">Work order name is required.</span>
+          }
         </div>
 
         <!-- Status -->
@@ -38,6 +45,8 @@
           <label class="field-label">Status</label>
           <ng-select
             class="status-select"
+            [class.select-error]="statusControl.invalid && statusControl.touched"
+            formControlName="status"
             [items]="statusOptions"
             bindValue="value"
             bindLabel="label"
@@ -52,21 +61,50 @@
               <span class="status-pill" [ngClass]="'pill-' + item.value">{{ item.label }}</span>
             </ng-template>
           </ng-select>
+          @if (statusControl.invalid && statusControl.touched) {
+            <span class="error-message">Please select a status.</span>
+          }
         </div>
+
+        <!-- Overlap error banner -->
+        @if (form.errors?.['workCenterOverlap'] && (startDateControl.touched || endDateControl.touched)) {
+          <div class="form-error-banner">
+            This Work Center is already scheduled during the selected dates.
+          </div>
+        }
 
         <!-- Date row -->
         <div class="form-row">
           <div class="form-field">
             <label class="field-label">Start Date</label>
             <div class="date-input-wrapper">
-              <input type="date" class="date-input" />
+              <input
+                type="date"
+                class="date-input"
+                [class.input-error]="startDateControl.invalid && startDateControl.touched"
+                formControlName="startDate"
+              />
             </div>
+            @if (startDateControl.invalid && startDateControl.touched) {
+              <span class="error-message">Start date is required.</span>
+            }
           </div>
           <div class="form-field">
             <label class="field-label">End Date</label>
             <div class="date-input-wrapper">
-              <input type="date" class="date-input" />
+              <input
+                type="date"
+                class="date-input"
+                [class.input-error]="(endDateControl.invalid && endDateControl.touched) || (form.errors?.['endDateBeforeStartDate'] && endDateControl.touched)"
+                formControlName="endDate"
+              />
             </div>
+            @if (endDateControl.invalid && endDateControl.touched) {
+              <span class="error-message">End date is required.</span>
+            }
+            @if (form.errors?.['endDateBeforeStartDate'] && endDateControl.touched) {
+              <span class="error-message">End date must be later than the start date.</span>
+            }
           </div>
         </div>
 

@@ -354,6 +354,42 @@
   color: rgba(177, 54, 0, 1);
 }
 
+/* ── Overlap error banner ── */
+
+.form-error-banner {
+  padding: 10px 14px;
+  border-radius: 7px;
+  background-color: rgba(254, 242, 242, 1);
+  border: 1px solid rgba(252, 165, 165, 1);
+  font-family: 'Circular-Std';
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(185, 28, 28, 1);
+  line-height: 18px;
+}
+
+/* ── Validation error states ── */
+
+.input-error {
+  box-shadow: 0 0 0 1.5px rgba(220, 38, 38, 0.6),
+    0 1px 3px 0 rgba(220, 38, 38, 0.15) !important;
+}
+
+.error-message {
+  font-family: 'Circular-Std';
+  font-size: 12px;
+  font-weight: 400;
+  color: rgba(220, 38, 38, 1);
+  margin-top: 4px;
+}
+
+:host ::ng-deep .status-select.select-error {
+  .ng-select-container {
+    box-shadow: 0 0 0 1.5px rgba(220, 38, 38, 0.6),
+      0 1px 3px 0 rgba(220, 38, 38, 0.15);
+  }
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;

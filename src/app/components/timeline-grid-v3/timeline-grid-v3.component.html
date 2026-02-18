@@ -35,7 +35,7 @@
       <div
         class="grid-track"
         [style.grid-template-columns]="gridTemplateColumns()"
-        (boxClicked)="openWorkOrderPanel($event)"
+        (boxClicked)="openWorkOrderPanel($event, workCenter)"
       >
         <!-- Current time vertical line (every row) -->
         <div
@@ -59,6 +59,9 @@
           *ngFor="let positioned of positionedOrdersByCenter().get(workCenter.docId); trackBy: trackByPositionedOrder"
           [name]="positioned.order.data.name"
           [status]="positioned.order.data.status"
+          [workOrder]="positioned.order"
+          (editClicked)="onEditWorkOrder($event, workCenter)"
+          (deleteClicked)="onDeleteWorkOrder($event)"
           [style.grid-row]="1"
           [style.grid-column]="positioned.gridColumnStart + ' / ' + positioned.gridColumnEnd"
           [style.margin-left.px]="positioned.marginLeftPx"

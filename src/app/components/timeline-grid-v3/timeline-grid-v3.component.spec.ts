@@ -1,6 +1,7 @@
 import { Component, provideZonelessChangeDetection, signal } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TimelineGridV3Component } from './timeline-grid-v3.component';
+import { WorkOrderDocument } from '../../../model';
 import { WorkCenterService, WorkCenterWithOrders } from '../../services/workcenters.service';
 
 // ── Test data ──────────────────────────────────────────────────────────────────
@@ -17,6 +18,7 @@ const TEST_WORK_CENTERS: WorkCenterWithOrders[] = Array.from({ length: 30 }, (_,
 class MockWorkCenterService {
   private _workCenters = signal<WorkCenterWithOrders[]>(TEST_WORK_CENTERS);
   readonly workCenters = this._workCenters.asReadonly();
+  readonly lastSavedWorkOrder = signal<WorkOrderDocument | null>(null);
 }
 
 // ── Test host to drive the timescale input ─────────────────────────────────────
@@ -618,6 +620,7 @@ describe('TimelineGridV3Component – work order bar rendering', () => {
   class MockWorkCenterServiceWithOrder {
     private _workCenters = signal<WorkCenterWithOrders[]>(CENTERS_WITH_ORDER);
     readonly workCenters = this._workCenters.asReadonly();
+    readonly lastSavedWorkOrder = signal<WorkOrderDocument | null>(null);
   }
 
   beforeEach(async () => {
@@ -736,6 +739,7 @@ describe('TimelineGridV3Component – day timescale bar positioning', () => {
   class MockWorkCenterServiceJan {
     private _wc = signal<WorkCenterWithOrders[]>(JAN_CENTER);
     readonly workCenters = this._wc.asReadonly();
+    readonly lastSavedWorkOrder = signal<WorkOrderDocument | null>(null);
   }
 
   beforeEach(async () => {
