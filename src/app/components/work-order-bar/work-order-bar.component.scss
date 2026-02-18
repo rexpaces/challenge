@@ -1,0 +1,108 @@
+:host {
+  display: block;
+  min-width: 0;
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  height: 32px;
+  border-radius: 8px;
+  padding: 0 8px;
+  cursor: pointer;
+  overflow: hidden;
+  white-space: nowrap;
+  gap: 8px;
+
+  &:hover .dots-btn {
+    opacity: 1;
+  }
+}
+
+.name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: rgba(3, 9, 41, 1);
+  font-size: 14px;
+  font-weight: 500;
+  font-family: 'Circular-Std';
+  line-height: 17px;
+}
+
+.pill {
+  flex-shrink: 0;
+  border-radius: 5px;
+  padding: 2px 8px;
+  font-size: 14px;
+  font-weight: 400;
+  font-family: 'Circular-Std';
+  line-height: 17px;
+}
+
+.dots-btn {
+  flex-shrink: 0;
+  width: 24px;
+  height: 22px;
+  border-radius: 5px;
+  background-color: rgba(216, 220, 235, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.dot {
+  width: 1.5px;
+  height: 1.5px;
+  border: 1.4px solid rgba(47, 48, 89, 1);
+  background-color: rgba(47, 48, 89, 1);
+  border-radius: 50%;
+}
+
+/* ── Status: in-progress ── */
+.status-in-progress {
+  background-color: rgba(237, 238, 255, 1);
+  box-shadow: 0 0 0 1px rgba(222, 224, 255, 1);
+}
+
+.pill-in-progress {
+  background-color: rgba(214, 216, 255, 1);
+  color: rgba(62, 64, 219, 1);
+}
+
+/* ── Status: open ── */
+.status-open {
+  background-color: rgba(228, 253, 255, 1);
+  border: 1px solid rgba(206, 251, 255, 1);
+}
+
+.pill-open {
+  background-color: rgba(206, 251, 255, 1);
+  color: rgba(0, 176, 191, 1);
+}
+
+/* ── Status: complete ── */
+.status-complete {
+  background-color: rgba(248, 255, 243, 1);
+  box-shadow: 0 0 0 1px rgba(209, 250, 179, 1);
+}
+
+.pill-complete {
+  background-color: rgba(225, 255, 204, 1);
+  color: rgba(8, 162, 104, 1);
+}
+
+/* ── Status: blocked ── */
+.status-blocked {
+  background-color: rgba(255, 252, 241, 1);
+  box-shadow: 0 0 0 1px rgba(255, 245, 207, 1);
+}
+
+.pill-blocked {
+  background-color: rgba(252, 238, 181, 1);
+  color: rgba(177, 54, 0, 1);
+}

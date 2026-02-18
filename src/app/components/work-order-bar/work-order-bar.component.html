@@ -1,0 +1,9 @@
+<div class="bar" [ngClass]="'status-' + status()">
+  <span class="name">{{ name() }}</span>
+  <span class="pill" [ngClass]="'pill-' + status()">{{ status() }}</span>
+  <div class="dots-btn">
+    <span class="dot"></span>
+    <span class="dot"></span>
+    <span class="dot"></span>
+  </div>
+</div>

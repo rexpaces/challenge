@@ -1,0 +1,53 @@
+<div class="timeline-grid-container">
+  <!-- Header row: fixed left label + horizontally virtualized month headers -->
+  <div class="header-row">
+    <div class="left-header">Work Center</div>
+    <cdk-virtual-scroll-viewport
+      class="header-viewport"
+      orientation="horizontal"
+      [itemSize]="COLUMN_WIDTH"
+      #headerViewport
+    >
+      <div
+        class="date-column-header"
+        *cdkVirtualFor="let unit of timeUnits(); trackBy: trackByTimeUnitId"
+        [style.width.px]="COLUMN_WIDTH"
+      >
+        {{ unit.label }}
+      </div>
+    </cdk-virtual-scroll-viewport>
+  </div>
+
+  <!-- Body: vertical virtual scroll + native horizontal scroll -->
+  <cdk-virtual-scroll-viewport
+    class="grid-viewport"
+    [itemSize]="ROW_HEIGHT"
+    #bodyViewport
+  >
+    <div
+      class="row"
+      *cdkVirtualFor="let workCenter of workCenters(); trackBy: trackByWorkCenterId"
+      [style.width.px]="horizontalRowWidth()"
+    >
+      <div class="work-center-cell">
+        {{ workCenter.data.name }}
+      </div>
+      <div
+        class="grid-track"
+        [style.grid-template-columns]="gridTemplateColumns()"
+      >
+        <app-work-order-bar
+          *ngFor="let positioned of positionedOrdersByCenter().get(workCenter.docId); trackBy: trackByPositionedOrder"
+          [name]="positioned.order.data.name"
+          [status]="positioned.order.data.status"
+          [style.grid-row]="1"
+          [style.grid-column]="positioned.gridColumnStart + ' / ' + positioned.gridColumnEnd"
+          [style.margin-left.px]="positioned.marginLeftPx"
+          [style.margin-right.px]="positioned.marginRightPx"
+          [style.z-index]="1"
+          [style.align-self]="'center'"
+        ></app-work-order-bar>
+      </div>
+    </div>
+  </cdk-virtual-scroll-viewport>
+</div>

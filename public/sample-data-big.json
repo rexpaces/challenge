@@ -557,28 +557,7 @@
         "data": {
           "name": "Product Palletizing - Area 4"
         }
-      },
-      { "docId": "wc-80", "docType": "workCenter", "data": { "name": "Assembly Line A1" } },
-  { "docId": "wc-81", "docType": "workCenter", "data": { "name": "Assembly Line A2" } },
-  { "docId": "wc-82", "docType": "workCenter", "data": { "name": "Assembly Line A3" } },
-  { "docId": "wc-83", "docType": "workCenter", "data": { "name": "Packaging Station 1" } },
-  { "docId": "wc-84", "docType": "workCenter", "data": { "name": "Packaging Station 2" } },
-  { "docId": "wc-85", "docType": "workCenter", "data": { "name": "Packaging Station 3" } },
-  { "docId": "wc-86", "docType": "workCenter", "data": { "name": "Quality Control Bench 1" } },
-  { "docId": "wc-87", "docType": "workCenter", "data": { "name": "Quality Control Bench 2" } },
-  { "docId": "wc-88", "docType": "workCenter", "data": { "name": "Quality Control Bench 3" } },
-  { "docId": "wc-89", "docType": "workCenter", "data": { "name": "CNC Machining Center 1" } },
-  { "docId": "wc-90", "docType": "workCenter", "data": { "name": "CNC Machining Center 2" } },
-  { "docId": "wc-91", "docType": "workCenter", "data": { "name": "CNC Machining Center 3" } },
-  { "docId": "wc-92", "docType": "workCenter", "data": { "name": "Welding Station Alpha" } },
-  { "docId": "wc-93", "docType": "workCenter", "data": { "name": "Welding Station Beta" } },
-  { "docId": "wc-94", "docType": "workCenter", "data": { "name": "Welding Station Gamma" } },
-  { "docId": "wc-95", "docType": "workCenter", "data": { "name": "Laser Cutting Unit 1" } },
-  { "docId": "wc-96", "docType": "workCenter", "data": { "name": "Laser Cutting Unit 2" } },
-  { "docId": "wc-97", "docType": "workCenter", "data": { "name": "Laser Cutting Unit 3" } },
-  { "docId": "wc-98", "docType": "workCenter", "data": { "name": "Surface Finishing Booth 1" } },
-  { "docId": "wc-99", "docType": "workCenter", "data": { "name": "Surface Finishing Booth 2" } },
-  { "docId": "wc-100", "docType": "workCenter", "data": { "name": "Surface Finishing Booth 3" } }
+      }
     ],
     "workOrders": [
       {

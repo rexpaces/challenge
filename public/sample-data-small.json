@@ -1,0 +1,426 @@
+{
+  "metadata": {
+    "generatedAt": "2026-02-13T22:06:51.855Z",
+    "version": "1.0.0"
+  },
+  "data": {
+    "workCenters": [
+      {
+        "docId": "wc-1",
+        "docType": "workCenter",
+        "data": {
+          "name": "Robotic Welding Cell 4"
+        }
+      },
+      {
+        "docId": "wc-2",
+        "docType": "workCenter",
+        "data": {
+          "name": "Powder Coating Booth 2"
+        }
+      },
+      {
+        "docId": "wc-3",
+        "docType": "workCenter",
+        "data": {
+          "name": "Electronic Assembly Station 7"
+        }
+      },
+      {
+        "docId": "wc-4",
+        "docType": "workCenter",
+        "data": {
+          "name": "Vision Inspection System 1"
+        }
+      },
+      {
+        "docId": "wc-5",
+        "docType": "workCenter",
+        "data": {
+          "name": "Automated Palletizing Line"
+        }
+      }
+    ],
+    "workOrders": [
+      {
+        "docId": "wo-1",
+        "docType": "workOrder",
+        "data": {
+          "name": "Order #7892 - AutoPartsCo",
+          "workCenterId": "wc-1",
+          "status": "open",
+          "startDate": "2026-02-24T18:41:37.600Z",
+          "endDate": "2026-02-26T15:41:37.600Z"
+        }
+      },
+      {
+        "docId": "wo-2",
+        "docType": "workOrder",
+        "data": {
+          "name": "Job #WL-458 - Frame Weld",
+          "workCenterId": "wc-1",
+          "status": "in-progress",
+          "startDate": "2026-02-19T15:24:32.062Z",
+          "endDate": "2026-02-21T14:24:32.062Z"
+        }
+      },
+      {
+        "docId": "wo-3",
+        "docType": "workOrder",
+        "data": {
+          "name": "Customer GlobalTech - Chassis Batch 12",
+          "workCenterId": "wc-1",
+          "status": "complete",
+          "startDate": "2026-02-10T08:15:21.524Z",
+          "endDate": "2026-02-11T17:15:21.524Z"
+        }
+      },
+      {
+        "docId": "wo-4",
+        "docType": "workOrder",
+        "data": {
+          "name": "Work Order #GW-20260215 - Motor Housing",
+          "workCenterId": "wc-1",
+          "status": "blocked",
+          "startDate": "2026-04-03T06:03:08.547Z",
+          "endDate": "2026-04-04T08:03:08.547Z"
+        }
+      },
+      {
+        "docId": "wo-5",
+        "docType": "workOrder",
+        "data": {
+          "name": "Internal Project Phoenix - Phase 2",
+          "workCenterId": "wc-1",
+          "status": "open",
+          "startDate": "2026-03-05T14:54:13.062Z",
+          "endDate": "2026-03-07T03:54:13.062Z"
+        }
+      },
+      {
+        "docId": "wo-6",
+        "docType": "workOrder",
+        "data": {
+          "name": "Customer Stellar Dynamics - Frame Weld Batch 17",
+          "workCenterId": "wc-1",
+          "status": "in-progress",
+          "startDate": "2026-04-12T08:15:35.671Z",
+          "endDate": "2026-04-14T08:15:35.671Z"
+        }
+      },
+      {
+        "docId": "wo-7",
+        "docType": "workOrder",
+        "data": {
+          "name": "Order #7892 - Final Assembly Prep",
+          "workCenterId": "wc-1",
+          "status": "complete",
+          "startDate": "2026-03-09T23:21:09.651Z",
+          "endDate": "2026-03-10T04:21:09.651Z"
+        }
+      },
+      {
+        "docId": "wo-8",
+        "docType": "workOrder",
+        "data": {
+          "name": "Customer Alpha Parts - Run 3",
+          "workCenterId": "wc-2",
+          "status": "open",
+          "startDate": "2026-02-26T05:58:21.624Z",
+          "endDate": "2026-02-27T18:58:21.624Z"
+        }
+      },
+      {
+        "docId": "wo-9",
+        "docType": "workOrder",
+        "data": {
+          "name": "Batch-007 - Frame Components",
+          "workCenterId": "wc-2",
+          "status": "in-progress",
+          "startDate": "2026-04-10T04:22:57.219Z",
+          "endDate": "2026-04-13T03:22:57.219Z"
+        }
+      },
+      {
+        "docId": "wo-10",
+        "docType": "workOrder",
+        "data": {
+          "name": "Order #7842 - Automotive Brackets",
+          "workCenterId": "wc-2",
+          "status": "complete",
+          "startDate": "2026-03-11T13:20:05.432Z",
+          "endDate": "2026-03-13T06:20:05.432Z"
+        }
+      },
+      {
+        "docId": "wo-11",
+        "docType": "workOrder",
+        "data": {
+          "name": "Job 1298 - Industrial Shelving",
+          "workCenterId": "wc-2",
+          "status": "open",
+          "startDate": "2026-01-16T03:45:46.465Z",
+          "endDate": "2026-01-16T08:45:46.465Z"
+        }
+      },
+      {
+        "docId": "wo-12",
+        "docType": "workOrder",
+        "data": {
+          "name": "Customer Beta Corp - Panel Set A",
+          "workCenterId": "wc-2",
+          "status": "blocked",
+          "startDate": "2026-03-14T08:23:12.578Z",
+          "endDate": "2026-03-14T19:23:12.578Z"
+        }
+      },
+      {
+        "docId": "wo-13",
+        "docType": "workOrder",
+        "data": {
+          "name": "Customer Stellar Dynamics - Frame Batch 17",
+          "workCenterId": "wc-2",
+          "status": "open",
+          "startDate": "2026-01-20T16:05:27.656Z",
+          "endDate": "2026-01-22T22:05:27.656Z"
+        }
+      },
+      {
+        "docId": "wo-14",
+        "docType": "workOrder",
+        "data": {
+          "name": "Internal Job - Prototype Housing",
+          "workCenterId": "wc-2",
+          "status": "in-progress",
+          "startDate": "2026-02-07T22:27:53.659Z",
+          "endDate": "2026-02-10T10:27:53.659Z"
+        }
+      },
+      {
+        "docId": "wo-15",
+        "docType": "workOrder",
+        "data": {
+          "name": "Order #7894 - Retail Fixture Components",
+          "workCenterId": "wc-2",
+          "status": "complete",
+          "startDate": "2026-03-17T09:46:33.992Z",
+          "endDate": "2026-03-19T23:46:33.992Z"
+        }
+      },
+      {
+        "docId": "wo-16",
+        "docType": "workOrder",
+        "data": {
+          "name": "Order #3782 - Apex Industries",
+          "workCenterId": "wc-3",
+          "status": "open",
+          "startDate": "2026-04-12T20:50:11.953Z",
+          "endDate": "2026-04-14T06:50:11.953Z"
+        }
+      },
+      {
+        "docId": "wo-17",
+        "docType": "workOrder",
+        "data": {
+          "name": "Customer Gamma - Panel Assembly v3.1",
+          "workCenterId": "wc-3",
+          "status": "in-progress",
+          "startDate": "2026-03-18T16:57:39.661Z",
+          "endDate": "2026-03-19T12:57:39.661Z"
+        }
+      },
+      {
+        "docId": "wo-18",
+        "docType": "workOrder",
+        "data": {
+          "name": "Batch-015 - Robotics Control Unit",
+          "workCenterId": "wc-3",
+          "status": "complete",
+          "startDate": "2026-04-03T12:44:33.904Z",
+          "endDate": "2026-04-05T09:44:33.904Z"
+        }
+      },
+      {
+        "docId": "wo-19",
+        "docType": "workOrder",
+        "data": {
+          "name": "Order #4119 - Stellar Dynamics",
+          "workCenterId": "wc-3",
+          "status": "blocked",
+          "startDate": "2026-02-27T10:19:58.860Z",
+          "endDate": "2026-02-27T21:19:58.860Z"
+        }
+      },
+      {
+        "docId": "wo-20",
+        "docType": "workOrder",
+        "data": {
+          "name": "Customer Delta - Sensor Module Build",
+          "workCenterId": "wc-3",
+          "status": "open",
+          "startDate": "2026-02-25T08:33:34.290Z",
+          "endDate": "2026-02-25T19:33:34.290Z"
+        }
+      },
+      {
+        "docId": "wo-21",
+        "docType": "workOrder",
+        "data": {
+          "name": "Customer Gamma - Control Panel Build",
+          "workCenterId": "wc-3",
+          "status": "complete",
+          "startDate": "2026-03-25T06:17:28.961Z",
+          "endDate": "2026-03-25T10:17:28.961Z"
+        }
+      },
+      {
+        "docId": "wo-22",
+        "docType": "workOrder",
+        "data": {
+          "name": "Customer Stellar Dynamics - Phase Array Transducers",
+          "workCenterId": "wc-4",
+          "status": "open",
+          "startDate": "2026-02-17T20:45:28.577Z",
+          "endDate": "2026-02-18T04:45:28.577Z"
+        }
+      },
+      {
+        "docId": "wo-23",
+        "docType": "workOrder",
+        "data": {
+          "name": "Internal Quality Check - Batch 739",
+          "workCenterId": "wc-4",
+          "status": "in-progress",
+          "startDate": "2026-03-08T10:27:47.230Z",
+          "endDate": "2026-03-09T00:27:47.230Z"
+        }
+      },
+      {
+        "docId": "wo-24",
+        "docType": "workOrder",
+        "data": {
+          "name": "Order #2604 - Micro-Electronics PCB Inspection",
+          "workCenterId": "wc-4",
+          "status": "complete",
+          "startDate": "2026-02-03T18:47:50.060Z",
+          "endDate": "2026-02-06T03:47:50.060Z"
+        }
+      },
+      {
+        "docId": "wo-25",
+        "docType": "workOrder",
+        "data": {
+          "name": "Customer NovaTech - Fiber Optic Connectors",
+          "workCenterId": "wc-4",
+          "status": "open",
+          "startDate": "2026-03-04T20:30:21.495Z",
+          "endDate": "2026-03-05T01:30:21.495Z"
+        }
+      },
+      {
+        "docId": "wo-26",
+        "docType": "workOrder",
+        "data": {
+          "name": "Job 482 - Pressure Sensor Calibration",
+          "workCenterId": "wc-4",
+          "status": "blocked",
+          "startDate": "2026-04-14T17:46:14.222Z",
+          "endDate": "2026-04-17T02:46:14.222Z"
+        }
+      },
+      {
+        "docId": "wo-27",
+        "docType": "workOrder",
+        "data": {
+          "name": "Customer Stellar Dynamics - Panel Inspection - Rev B",
+          "workCenterId": "wc-4",
+          "status": "open",
+          "startDate": "2026-02-21T06:44:25.263Z",
+          "endDate": "2026-02-23T22:44:25.263Z"
+        }
+      },
+      {
+        "docId": "wo-28",
+        "docType": "workOrder",
+        "data": {
+          "name": "RetailCo - Display Palletization - Run 3",
+          "workCenterId": "wc-5",
+          "status": "open",
+          "startDate": "2026-01-30T17:34:56.365Z",
+          "endDate": "2026-02-01T14:34:56.365Z"
+        }
+      },
+      {
+        "docId": "wo-29",
+        "docType": "workOrder",
+        "data": {
+          "name": "ABC Foods - Frozen Veggies - Batch 127",
+          "workCenterId": "wc-5",
+          "status": "in-progress",
+          "startDate": "2026-03-14T01:32:33.035Z",
+          "endDate": "2026-03-14T08:32:33.035Z"
+        }
+      },
+      {
+        "docId": "wo-30",
+        "docType": "workOrder",
+        "data": {
+          "name": "Order #7892 - Automotive Parts",
+          "workCenterId": "wc-5",
+          "status": "complete",
+          "startDate": "2026-01-17T22:59:21.378Z",
+          "endDate": "2026-01-20T10:59:21.378Z"
+        }
+      },
+      {
+        "docId": "wo-31",
+        "docType": "workOrder",
+        "data": {
+          "name": "ConsumerGoods - Canned Goods - Q1 2026",
+          "workCenterId": "wc-5",
+          "status": "blocked",
+          "startDate": "2026-02-06T19:03:01.282Z",
+          "endDate": "2026-02-07T17:03:01.282Z"
+        }
+      },
+      {
+        "docId": "wo-32",
+        "docType": "workOrder",
+        "data": {
+          "name": "Order #7892 - Retail Packaging",
+          "workCenterId": "wc-5",
+          "status": "open",
+          "startDate": "2026-02-28T20:02:07.370Z",
+          "endDate": "2026-03-02T08:02:07.370Z"
+        }
+      },
+      {
+        "docId": "wo-33",
+        "docType": "workOrder",
+        "data": {
+          "name": "Customer Zenith - Model 3 Palletizing",
+          "workCenterId": "wc-5",
+          "status": "in-progress",
+          "startDate": "2026-04-10T07:43:37.078Z",
+          "endDate": "2026-04-11T12:43:37.078Z"
+        }
+      },
+      {
+        "docId": "wo-34",
+        "docType": "workOrder",
+        "data": {
+          "name": "Batch-Gamma-47 - Export Pallets",
+          "workCenterId": "wc-5",
+          "status": "complete",
+          "startDate": "2026-02-23T10:44:01.051Z",
+          "endDate": "2026-02-23T23:44:01.051Z"
+        }
+      }
+    ],
+    "stats": {
+      "totalGenerated": 40,
+      "totalValid": 34,
+      "totalDiscarded": 6
+    }
+  }
+}

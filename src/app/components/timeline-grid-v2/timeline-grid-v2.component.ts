@@ -51,8 +51,8 @@ interface PositionedWorkOrder {
 const ROW_HEIGHT = 48;
 const COLUMN_WIDTH = 113;
 const LEFT_PANEL_WIDTH = 200;
-const TOTAL_ROWS = 10;
-const BUFFER_MONTHS = 24; // 2 years each direction from today
+const TOTAL_ROWS = 1000;
+const BUFFER_MONTHS = 48;
 
 @Component({
   selector: 'app-timeline-grid-v2',
@@ -519,7 +519,7 @@ export class TimelineGridV2Component implements AfterViewInit, OnDestroy {
         // Determine expansion amount based on timescale
         let unitsToExpand = 6;
         if (timescale === 'Month') {
-          unitsToExpand = 6; // 6 months
+          unitsToExpand = 24;
         } else if (timescale === 'Week') {
           unitsToExpand = 12; // 12 weeks (~3 months)
         } else if (timescale === 'Day') {
@@ -527,6 +527,13 @@ export class TimelineGridV2Component implements AfterViewInit, OnDestroy {
         }
 
         if (needsExpandLeft) {
+          // Compensate scroll BEFORE updating the signal.
+          // If the signal fires CD first, the browser would paint one frame
+          // with shifted grid positions but the old scrollLeft → flicker.
+          const addedWidth = unitsToExpand * COLUMN_WIDTH;
+          this.bodyEl!.scrollLeft += addedWidth;
+          this.headerEl!.scrollLeft = this.bodyEl!.scrollLeft;
+
           const current = this.visibleDateRange();
           const start = new Date(current.start);
 
@@ -539,12 +546,6 @@ export class TimelineGridV2Component implements AfterViewInit, OnDestroy {
           }
 
           this.visibleDateRange.set({ start, end: current.end });
-
-          // Compensate scroll so viewport stays in place
-          const addedWidth = unitsToExpand * COLUMN_WIDTH;
-          this.bodyEl!.scrollLeft += addedWidth;
-          this.headerEl!.scrollLeft = this.bodyEl!.scrollLeft;
-          // Keep visible column range in sync for correct work order filtering
 
         }
 

@@ -1,0 +1,160 @@
+@import '../../styles/colors.scss';
+
+:host {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+.timeline-grid-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border: $border-default;
+  background-color: $color-bg-white;
+}
+
+/* ── Header Row ── */
+.header-row {
+  display: flex;
+  flex-shrink: 0;
+  height: 32px;
+}
+
+.left-header {
+  z-index: 2;
+  width: $left-panel-width;
+  min-width: $left-panel-width;
+  height: 32px;
+  padding-left: $spacing-xl;
+  display: flex;
+  align-items: center;
+  color: $color-slate;
+  font-family: $font-family-default;
+  font-size: $font-size-default;
+  font-weight: 400;
+  line-height: $line-height-default;
+  border-bottom: $border-default;
+  border-right: $border-default;
+  background-color: $color-bg-white;
+}
+
+/* Horizontal CDK virtual scroll for month headers */
+cdk-virtual-scroll-viewport.header-viewport {
+  flex: 1;
+  height: 32px;
+
+  /* Scroll is driven by body viewport sync — disable user interaction */
+  pointer-events: none;
+  overflow: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Lay items out horizontally inside CDK content wrapper */
+  ::ng-deep .cdk-virtual-scroll-content-wrapper {
+    display: flex;
+    flex-direction: row;
+  }
+}
+
+.date-column-header {
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $color-slate;
+  font-family: $font-family-default;
+  font-size: $font-size-default;
+  font-weight: 400;
+  line-height: $line-height-default;
+  flex-shrink: 0;
+  border-bottom: $border-default;
+  background-color: $color-bg-white;
+}
+
+/* ── Single Viewport ── */
+cdk-virtual-scroll-viewport.grid-viewport {
+  flex: 1;
+  position: relative;
+  background-color: $color-bg-grid;
+}
+
+.row {
+  display: flex;
+  height: 48px;
+}
+
+.row:hover .work-center-cell {
+  background-color: $color-bg-hover-left;
+}
+
+.row:hover .grid-track {
+  background-color: $color-bg-hover-right;
+}
+
+.work-center-cell {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  width: $left-panel-width;
+  min-width: $left-panel-width;
+  flex-shrink: 0;
+  padding-left: $spacing-xl;
+  display: flex;
+  align-items: center;
+  color: $color-dark-blue;
+  font-family: $font-family-default;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 17px;
+  border-top: 1px solid $color-border-light;
+  border-right: $border-default;
+  background-color: $color-bg-white;
+}
+
+/* ── CSS Grid Track (replaces flex cells + overlay) ── */
+.grid-track {
+  display: grid;
+  height: 100%;
+  align-items: center;
+
+  // Vertical grid lines via repeating background
+  background-color: $color-bg-grid;
+  background-image: repeating-linear-gradient(
+    to right,
+    transparent 0px,
+    transparent #{$column-width-month - 1px},
+    $color-border-light #{$column-width-month - 1px},
+    $color-border-light #{$column-width-month}
+  );
+  background-size: #{$column-width-month} 100%;
+
+
+}
+
+/* Work order bars are rendered by <app-work-order-bar> inside the grid track */
+app-work-order-bar {
+  min-width: 0;
+}
+
+/* Target the body viewport's internal wrapper that holds the rows */
+cdk-virtual-scroll-viewport.grid-viewport ::ng-deep .cdk-virtual-scroll-content-wrapper {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  &::after {
+    position: sticky;
+    flex-grow: 1;
+    content: '';
+    width: $left-panel-width;
+    border-right: $border-default;
+    background-color: $color-bg-white;
+    left: 0;
+    z-index: 2;
+  }
+}
