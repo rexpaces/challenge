@@ -1,3 +1,5 @@
+@import '../../styles/colors.scss';
+
 .panel-wrapper {
   position: fixed;
   top: 0;
@@ -28,7 +30,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(247, 249, 252, 0.5);
+  background-color: $color-bg-overlay;
   z-index: 99;
 }
 
@@ -38,7 +40,7 @@
   right: -591px;
   width: 591px;
   height: 100vh;
-  background-color: rgba(255, 255, 255, 1);
+  background-color: $color-white;
   box-shadow: 0 5px 15px 0 rgba(216, 220, 235, 1),
     0 2.5px 3px -1.5px rgba(200, 207, 233, 1),
     0 4.5px 5px -1px rgba(216, 220, 235, 1);
@@ -77,14 +79,14 @@
 .panel-title {
   font-weight: 600;
   font-family: 'Circular-Std';
-  color: rgba(47, 48, 89, 1);
+  color: $color-dark-slate;
   font-size: 20px;
   line-height: 24px;
   margin-bottom: 4px;
 }
 
 .panel-subtitle {
-  color: rgba(104, 113, 150, 1);
+  color: $color-slate;
   font-family: 'Circular-Std';
   font-size: 16px;
   font-weight: 500;
@@ -119,16 +121,16 @@
 }
 
 .btn-cancel {
-  background-color: rgba(255, 255, 255, 1);
-  color: rgba(47, 48, 89, 1);
+  background-color: $color-white;
+  color: $color-dark-slate;
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 1),
     0 1px 3px 0 rgba(200, 207, 233, 1);
   letter-spacing: 0.33px;
 }
 
 .btn-create {
-  background-color: rgba(86, 89, 255, 1);
-  color: rgba(255, 255, 255, 1);
+  background-color: $color-primary-blue;
+  color: $color-white;
   box-shadow: 0 0 0 1px rgba(86, 89, 255, 1),
     0 1px 3px 0 rgba(200, 207, 233, 1);
   letter-spacing: 0.33px;
@@ -162,7 +164,7 @@
   font-family: 'Circular-Std';
   font-size: 14px;
   font-weight: 500;
-  color: rgba(104, 113, 150, 1);
+  color: $color-slate;
   line-height: 17px;
   margin-bottom: 8px;
 }
@@ -179,13 +181,13 @@
   font-family: 'Circular-Std';
   font-size: 15px;
   font-weight: 400;
-  color: rgba(47, 48, 89, 1);
-  background-color: rgba(255, 255, 255, 1);
+  color: $color-dark-slate;
+  background-color: $color-white;
   outline: none;
   transition: box-shadow 0.15s ease;
 
   &::placeholder {
-    color: rgba(176, 183, 210, 1);
+    color: $color-placeholder;
   }
 
   &:focus {
@@ -211,8 +213,8 @@
   font-family: 'Circular-Std';
   font-size: 15px;
   font-weight: 400;
-  color: rgba(47, 48, 89, 1);
-  background-color: rgba(255, 255, 255, 1);
+  color: $color-dark-slate;
+  background-color: $color-white;
   outline: none;
   cursor: pointer;
   transition: box-shadow 0.15s ease;
@@ -246,7 +248,7 @@
     border-radius: 5px;
     box-shadow: 0 0 0 1px rgba(216, 220, 235, 1),
       0 1px 3px 0 rgba(200, 207, 233, 0.4);
-    background-color: rgba(255, 255, 255, 1);
+    background-color: $color-white;
     cursor: pointer;
 
     .ng-value-container {
@@ -257,7 +259,7 @@
       font-family: 'Circular-Std';
       font-size: 15px;
       font-weight: 400;
-      color: rgba(176, 183, 210, 1);
+      color: $color-placeholder;
     }
   }
 
@@ -270,7 +272,7 @@
     padding-right: 12px;
 
     .ng-arrow {
-      border-color: rgba(104, 113, 150, 1) transparent transparent;
+      border-color: $color-slate transparent transparent;
     }
   }
 
@@ -295,7 +297,7 @@
       padding: 0;
       border-radius: 0;
       background-color: transparent;
-      color: rgba(47, 48, 89, 1);
+      color: $color-dark-slate;
       font-family: 'Circular-Std';
       font-size: 14px;
       font-weight: 500;
@@ -309,13 +311,13 @@
 
       &.ng-option-marked {
         background-color: transparent;
-        color: rgba(47, 48, 89, 1);
+        color: $color-dark-slate;
       }
 
       &.ng-option-selected,
       &.ng-option-selected.ng-option-marked {
         background-color: transparent;
-        color: rgba(62, 64, 219, 1);
+        color: $color-blue-active;
       }
     }
   }
@@ -335,23 +337,23 @@
 }
 
 .pill-open {
-  background-color: rgba(206, 251, 255, 1);
-  color: rgba(0, 176, 191, 1);
+  background-color: $color-status-open-pill;
+  color: $color-status-open-text;
 }
 
 .pill-in-progress {
-  background-color: rgba(214, 216, 255, 1);
-  color: rgba(62, 64, 219, 1);
+  background-color: $color-status-in-progress-pill;
+  color: $color-status-in-progress-text;
 }
 
 .pill-complete {
-  background-color: rgba(225, 255, 204, 1);
-  color: rgba(8, 162, 104, 1);
+  background-color: $color-status-complete-pill;
+  color: $color-status-complete-text;
 }
 
 .pill-blocked {
-  background-color: rgba(252, 238, 181, 1);
-  color: rgba(177, 54, 0, 1);
+  background-color: $color-status-blocked-pill;
+  color: $color-status-blocked-text;
 }
 
 /* ── Overlap error banner ── */
@@ -359,12 +361,12 @@
 .form-error-banner {
   padding: 10px 14px;
   border-radius: 7px;
-  background-color: rgba(254, 242, 242, 1);
+  background-color: $color-error-bg;
   border: 1px solid rgba(252, 165, 165, 1);
   font-family: 'Circular-Std';
   font-size: 13px;
   font-weight: 500;
-  color: rgba(185, 28, 28, 1);
+  color: $color-error-text;
   line-height: 18px;
 }
 
@@ -379,7 +381,7 @@
   font-family: 'Circular-Std';
   font-size: 12px;
   font-weight: 400;
-  color: rgba(220, 38, 38, 1);
+  color: $color-error-input;
   margin-top: 4px;
 }
 

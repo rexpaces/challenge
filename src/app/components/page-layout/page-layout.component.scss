@@ -1,9 +1,11 @@
+@import '../../styles/colors.scss';
+
 :host {
   display: block;
   width: 100%;
   height: 100vh;
   overflow: hidden;
-  background-color: rgba(255, 255, 255, 1);
+  background-color: $color-white;
 }
 
 .page-wrapper {
@@ -19,7 +21,7 @@
   box-sizing: border-box;
   display: flex;
   align-items: center;
-  background-color: #ffffff; /* Explicitly white as per spec */
+  background-color: $color-white;
 }
 
 .header-logo {
@@ -40,7 +42,7 @@ height: 10px;
 .page-title {
   margin: 45px 0 0 0; /* 45px below header */
   height: 34px;
-  color: rgba(3, 9, 41, 1);
+  color: $color-dark-blue;
   font-family: 'Circular-Std';
   font-size: 24px;
   font-weight: 600;

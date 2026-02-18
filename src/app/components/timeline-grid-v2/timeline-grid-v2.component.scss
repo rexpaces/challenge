@@ -141,7 +141,7 @@ cdk-virtual-scroll-viewport.grid-viewport {
   align-self: center;
   z-index: 1;
   height: 32px;
-  background-color: rgba(237, 238, 255, 1);
+  background-color: $color-status-in-progress-bg;
   border-radius: 8px;
   box-shadow: 0 0 0 1px rgba(222, 224, 255, 1);
   display: flex;
@@ -152,7 +152,7 @@ cdk-virtual-scroll-viewport.grid-viewport {
   white-space: nowrap;
 
   &:hover {
-    background-color: rgba(227, 228, 255, 1);
+    background-color: $color-status-in-progress-hover;
   }
 }
 

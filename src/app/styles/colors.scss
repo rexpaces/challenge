@@ -6,7 +6,15 @@
 // Primary colors
 $color-white: rgba(255, 255, 255, 1);
 $color-dark-blue: rgba(3, 9, 41, 1);
+$color-dark-slate: rgba(47, 48, 89, 1);
 $color-slate: rgba(104, 113, 150, 1);
+$color-placeholder: rgba(176, 183, 210, 1);
+
+// Action colors
+$color-blue-active: rgba(62, 64, 219, 1);
+$color-primary-blue: rgba(86, 89, 255, 1);
+$color-button-gray: rgba(216, 220, 235, 1);
+$color-label-bg: #F1F3F8;
 
 // Border colors
 $color-border-light: #E6EBF0;
@@ -16,6 +24,34 @@ $color-bg-white: rgba(255, 255, 255, 1);
 $color-bg-grid: #F7F9FC;
 $color-bg-hover-left: #FAFBFD;
 $color-bg-hover-right: #EEF0FF;
+$color-bg-overlay: rgba(247, 249, 252, 0.5);
+$color-current-time: rgba(212, 215, 255, 1);
+
+// Status colors — in-progress
+$color-status-in-progress-bg: rgba(237, 238, 255, 1);
+$color-status-in-progress-hover: rgba(227, 228, 255, 1);
+$color-status-in-progress-pill: rgba(214, 216, 255, 1);
+$color-status-in-progress-text: $color-blue-active;
+
+// Status colors — open
+$color-status-open-bg: rgba(228, 253, 255, 1);
+$color-status-open-pill: rgba(206, 251, 255, 1);
+$color-status-open-text: rgba(0, 176, 191, 1);
+
+// Status colors — complete
+$color-status-complete-bg: rgba(248, 255, 243, 1);
+$color-status-complete-pill: rgba(225, 255, 204, 1);
+$color-status-complete-text: rgba(8, 162, 104, 1);
+
+// Status colors — blocked
+$color-status-blocked-bg: rgba(255, 252, 241, 1);
+$color-status-blocked-pill: rgba(252, 238, 181, 1);
+$color-status-blocked-text: rgba(177, 54, 0, 1);
+
+// Error colors
+$color-error-bg: rgba(254, 242, 242, 1);
+$color-error-text: rgba(185, 28, 28, 1);
+$color-error-input: rgba(220, 38, 38, 1);
 
 // Typography
 $font-family-default: "Circular-Std";

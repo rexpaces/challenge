@@ -81,7 +81,7 @@ cdk-virtual-scroll-viewport.header-viewport {
 .current-time-line {
   width: 3px;
   align-self: stretch;
-  background-color: rgba(212, 215, 255, 1);
+  background-color: $color-current-time;
   pointer-events: none;
   z-index: 0;
 }
@@ -96,7 +96,7 @@ cdk-virtual-scroll-viewport.header-viewport {
   width: 109px;
   height: 22px;
   border-radius: 5px;
-  background-color: rgba(212, 215, 255, 1);
+  background-color: $color-current-time;
   display: flex;
   align-items: center;
   justify-content: center;

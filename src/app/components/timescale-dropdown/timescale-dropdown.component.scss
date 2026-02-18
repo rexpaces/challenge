@@ -1,8 +1,4 @@
-// Define Variables for reuse
-$font-family: "Circular-Std";
-$text-secondary: #687196;
-$text-primary: #2F3059;
-$text-active: #3E40DB;
+@import '../../styles/colors.scss';
 
 .timescale-wrapper {
   .custom-timescale-select {
@@ -32,15 +28,15 @@ $text-active: #3E40DB;
       .label-part {
         width: 75px;
         height: 25px;
-        background-color: #F1F3F8;
+        background-color: $color-label-bg;
         border-radius: 5px 0px 0px 5px;
         display: flex;
         align-items: center;
         justify-content: center;
 
         // Typography
-        color: $text-secondary;
-        font-family: $font-family;
+        color: $color-slate;
+        font-family: $font-family-default;
         font-size: 13px;
         font-weight: 500;
         line-height: 16px;
@@ -49,7 +45,7 @@ $text-active: #3E40DB;
       .value-part {
         width: 71px;
         height: 25px;
-        background-color: #FFFFFF;
+        background-color: $color-white;
         border-radius: 0px 5px 5px 0px;
         display: flex;
         align-items: center;
@@ -58,8 +54,8 @@ $text-active: #3E40DB;
         border-left: none;
 
         .text {
-          color: $text-active;
-          font-family: $font-family;
+          color: $color-blue-active;
+          font-family: $font-family-default;
           font-size: 13px;
           margin-right: 6.53px;
           font-weight: 600;
@@ -73,7 +69,7 @@ $text-active: #3E40DB;
       margin-top: 5px;
       width: 200px !important;
       height: 136px;
-      background-color: rgba(255, 255, 255, 1);
+      background-color: $color-white;
       border: none;
       border-radius: 5px;
       box-shadow:
@@ -101,13 +97,13 @@ $text-active: #3E40DB;
           }
 
           .custom-option {
-            color: $text-primary;
-            font-family: $font-family;
+            color: $color-dark-slate;
+            font-family: $font-family-default;
             font-size: 14px;
             font-weight: 500;
 
             &.is-selected {
-              color: rgba(62, 64, 219, 1);
+              color: $color-blue-active;
               font-family: 'Circular-Std';
               font-size: 14px;
               font-weight: 500;

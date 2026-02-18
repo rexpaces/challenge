@@ -1,3 +1,5 @@
+@import '../../styles/colors.scss';
+
 :host {
   display: block;
   min-width: 0;
@@ -24,7 +26,7 @@
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
-  color: rgba(3, 9, 41, 1);
+  color: $color-dark-blue;
   font-size: 14px;
   font-weight: 500;
   font-family: 'Circular-Std';
@@ -46,7 +48,7 @@
   width: 24px;
   height: 22px;
   border-radius: 5px;
-  background-color: rgba(216, 220, 235, 1);
+  background-color: $color-button-gray;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -59,7 +61,7 @@
   width: 1.5px;
   height: 1.5px;
   border: 1.4px solid rgba(47, 48, 89, 1);
-  background-color: rgba(47, 48, 89, 1);
+  background-color: $color-dark-slate;
   border-radius: 50%;
 }
 
@@ -72,7 +74,7 @@
     0 2.5px 3px -1.5px rgba(200, 207, 233, 1),
     0 4.5px 5px -1px rgba(216, 220, 235, 1);
   border-radius: 5px;
-  background-color: rgba(255, 255, 255, 1);
+  background-color: $color-white;
   padding-top: 12px;
   padding-bottom: 12px;
   padding-left: 12px;
@@ -102,11 +104,11 @@
 .menu-edit {
   width: 150px;
   height: 18px;
-  color: rgba(47, 48, 89, 1);
+  color: $color-dark-slate;
 }
 
 .menu-delete {
-  color: rgba(62, 64, 219, 1);
+  color: $color-blue-active;
 }
 
 /* ── Tooltip ── */
@@ -118,7 +120,7 @@
   min-width: 200px;
   padding: 12px 14px;
   border-radius: 8px;
-  background-color: rgba(255, 255, 255, 1);
+  background-color: $color-white;
   box-shadow:
     0 0 0 1px rgba(104, 113, 150, 0.12),
     0 4px 12px rgba(0, 0, 0, 0.12);
@@ -130,7 +132,7 @@
   font-size: 13px;
   font-weight: 600;
   line-height: 16px;
-  color: rgba(3, 9, 41, 1);
+  color: $color-dark-blue;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -146,7 +148,7 @@
   font-family: 'Circular-Std';
   font-size: 12px;
   font-weight: 400;
-  color: rgba(104, 113, 150, 1);
+  color: $color-slate;
   min-width: 38px;
 }
 
@@ -154,7 +156,7 @@
   font-family: 'Circular-Std';
   font-size: 12px;
   font-weight: 500;
-  color: rgba(3, 9, 41, 1);
+  color: $color-dark-blue;
 }
 
 .tooltip-pill {
@@ -168,44 +170,44 @@
 
 /* ── Status: in-progress ── */
 .status-in-progress {
-  background-color: rgba(237, 238, 255, 1);
+  background-color: $color-status-in-progress-bg;
   box-shadow: 0 0 0 1px rgba(222, 224, 255, 1);
 }
 
 .pill-in-progress {
-  background-color: rgba(214, 216, 255, 1);
-  color: rgba(62, 64, 219, 1);
+  background-color: $color-status-in-progress-pill;
+  color: $color-status-in-progress-text;
 }
 
 /* ── Status: open ── */
 .status-open {
-  background-color: rgba(228, 253, 255, 1);
+  background-color: $color-status-open-bg;
   border: 1px solid rgba(206, 251, 255, 1);
 }
 
 .pill-open {
-  background-color: rgba(206, 251, 255, 1);
-  color: rgba(0, 176, 191, 1);
+  background-color: $color-status-open-pill;
+  color: $color-status-open-text;
 }
 
 /* ── Status: complete ── */
 .status-complete {
-  background-color: rgba(248, 255, 243, 1);
+  background-color: $color-status-complete-bg;
   box-shadow: 0 0 0 1px rgba(209, 250, 179, 1);
 }
 
 .pill-complete {
-  background-color: rgba(225, 255, 204, 1);
-  color: rgba(8, 162, 104, 1);
+  background-color: $color-status-complete-pill;
+  color: $color-status-complete-text;
 }
 
 /* ── Status: blocked ── */
 .status-blocked {
-  background-color: rgba(255, 252, 241, 1);
+  background-color: $color-status-blocked-bg;
   box-shadow: 0 0 0 1px rgba(255, 245, 207, 1);
 }
 
 .pill-blocked {
-  background-color: rgba(252, 238, 181, 1);
-  color: rgba(177, 54, 0, 1);
+  background-color: $color-status-blocked-pill;
+  color: $color-status-blocked-text;
 }
