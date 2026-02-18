@@ -22,6 +22,7 @@ The repository is organized as follows:
 * **`/src`:** The Angular codebase, featuring the timeline grid logic.
 * **`/public`:** Contains two JSON data samples used for initial state.
 * **`/data-generator`:** A Node.js CLI tool built to generate realistic work center and order datasets using **Ollama**.
+* **`claude-session.md`:** An exported Claude Code session transcript. Note: this contains only the **last session**, not the full development history.
 
 ---
 
@@ -68,3 +69,15 @@ This project evolved through several architectural iterations to balance perform
 | **"Today" Button** | ❌ Not Done | - |
 
 | **Local Storage** | ❌ Not Done | Persistence not yet implemented. |
+
+---
+
+## 🔧 Recent Changes
+
+### Work Order Time Precision Fix
+The work order creation and update form previously only captured **date** values (via `<input type="date">`), causing all work orders to default to midnight (00:00). The timeline grid, however, positions bars with sub-column precision using exact timestamps. This mismatch has been fixed:
+
+- Added **start time** and **end time** inputs to the work order panel form.
+- Dates and times are now combined before saving, so work order bars reflect the exact intended schedule.
+- Validators (`endDateAfterStartDate`, `overlapValidator`) updated to account for time when comparing dates.
+- Added an **integration test** (`timeline-grid-work-order-integration.spec.ts`) that verifies bar positioning after editing a work order's end date/time across Month and Day timescales.
