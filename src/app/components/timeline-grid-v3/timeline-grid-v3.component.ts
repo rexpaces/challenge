@@ -74,6 +74,8 @@ export class TimelineGridV3Component implements AfterViewInit, OnDestroy {
   private scrollListener: (() => void) | null = null;
   private resizeListener: (() => void) | null = null;
   private rangeSubscription: Subscription | null = null;
+  private extendingRange = false;
+  private infiniteScrollTimer: ReturnType<typeof setTimeout> | null = null;
 
   // Track window width for responsive left panel width
   private windowWidth = signal(typeof window !== 'undefined' ? window.innerWidth : 1024);
@@ -211,6 +213,7 @@ export class TimelineGridV3Component implements AfterViewInit, OnDestroy {
             window.requestAnimationFrame(() => {
               const scrollLeft = this.bodyEl!.scrollLeft;
               this.headerViewport.scrollToOffset(scrollLeft);
+              this.scheduleInfiniteScrollCheck(scrollLeft);
               ticking = false;
             });
             ticking = true;
@@ -242,6 +245,7 @@ export class TimelineGridV3Component implements AfterViewInit, OnDestroy {
       window.removeEventListener('resize', this.resizeListener);
     }
     this.rangeSubscription?.unsubscribe();
+    if (this.infiniteScrollTimer) clearTimeout(this.infiniteScrollTimer);
   }
 
   trackByTimeUnitId(_index: number, item: TimeUnit) {
@@ -352,7 +356,10 @@ export class TimelineGridV3Component implements AfterViewInit, OnDestroy {
     });
   }
 
-  private getScrollEdgeDate(): Date {
+  private getScrollEdgeDate(
+    timescale = this.previousTimescale,
+    dateRange = this.previousDateRange,
+  ): Date {
     const scrollLeft = this.bodyEl!.scrollLeft;
     const colIdx = Math.floor(scrollLeft / COLUMN_WIDTH);
     const fractionInCol = (scrollLeft - colIdx * COLUMN_WIDTH) / COLUMN_WIDTH;
@@ -360,16 +367,16 @@ export class TimelineGridV3Component implements AfterViewInit, OnDestroy {
     // Compute start and end of the column at colIdx
     let colStart: Date;
     let colEnd: Date;
-    if (this.previousTimescale === TIME_SCALES.MONTH) {
-      colStart = new Date(this.previousDateRange.start);
+    if (timescale === TIME_SCALES.MONTH) {
+      colStart = new Date(dateRange.start);
       colStart.setDate(1);
       colStart.setHours(0, 0, 0, 0);
       colStart.setMonth(colStart.getMonth() + colIdx);
 
       colEnd = new Date(colStart);
       colEnd.setMonth(colEnd.getMonth() + 1);
-    } else if (this.previousTimescale === TIME_SCALES.WEEK) {
-      colStart = new Date(this.previousDateRange.start);
+    } else if (timescale === TIME_SCALES.WEEK) {
+      colStart = new Date(dateRange.start);
       colStart.setDate(colStart.getDate() - colStart.getDay());
       colStart.setHours(0, 0, 0, 0);
       colStart.setDate(colStart.getDate() + colIdx * 7);
@@ -377,7 +384,7 @@ export class TimelineGridV3Component implements AfterViewInit, OnDestroy {
       colEnd = new Date(colStart);
       colEnd.setDate(colEnd.getDate() + 7);
     } else {
-      colStart = new Date(this.previousDateRange.start);
+      colStart = new Date(dateRange.start);
       colStart.setHours(0, 0, 0, 0);
       colStart.setDate(colStart.getDate() + colIdx);
 
@@ -388,5 +395,46 @@ export class TimelineGridV3Component implements AfterViewInit, OnDestroy {
     // Interpolate within the column to get the exact date
     const dateMs = colStart.getTime() + fractionInCol * (colEnd.getTime() - colStart.getTime());
     return new Date(dateMs);
+  }
+
+  private scheduleInfiniteScrollCheck(scrollLeft: number) {
+    console.log('scheduleInfiniteScrollCheck');
+    if (this.infiniteScrollTimer) clearTimeout(this.infiniteScrollTimer);
+    this.infiniteScrollTimer = setTimeout(() => {
+      this.infiniteScrollTimer = null;
+      this.checkInfiniteScroll(scrollLeft);
+    }, 200);
+  }
+
+  private checkInfiniteScroll(scrollLeft: number) {
+    console.log('checkInfiniteScroll');
+    if (this.isInitializing || this.extendingRange) return;
+
+    const el = this.bodyEl!;
+    const maxScroll = el.scrollWidth - el.clientWidth;
+    if (maxScroll <= 0) return;
+
+    const scrollRatio = scrollLeft / maxScroll;
+    if (scrollRatio > 0.3 && scrollRatio < 0.7) return;
+
+    this.extendingRange = true;
+
+    // Capture anchor date from current scroll position using current timescale/range
+    const anchorDate = this.getScrollEdgeDate(this.currentTimescale, this.currentDateRange);
+    this.scrollerPositionAtDate = anchorDate;
+
+    // Regenerate date range and time units centered on the new anchor
+    const newRange = getTimeScaleDateRange(this.currentTimescale, anchorDate);
+    this.currentDateRange = newRange;
+    const units = getTimeUnits(this.currentTimescale, newRange);
+
+    this.zone.run(() => {
+      this._timeUnits.set(units);
+    });
+
+    requestAnimationFrame(() => {
+      this.scrollToDate(anchorDate, units);
+      this.extendingRange = false;
+    });
   }
 }

@@ -9,7 +9,7 @@ This project is a high-performance timeline/grid scheduling application built wi
 
 This challenge was an opportunity to dive deep into the latest Angular features. A significant portion of the development time was dedicated to the **Timeline Grid**. After three iterations, the final version strikes a balance between **clean code** and **high-performance rendering**. 
 
-The current solution is flexible: although full horizontal infinite scroll is pending, users can traverse any date range by switching timescales, which recomputes the grid based on the visible date range.
+The current solution supports **horizontal infinite scroll** in both directions — the timeline automatically extends as the user scrolls toward either edge, recentering the date range around the current scroll position.
 
 
 ---
@@ -23,6 +23,7 @@ The repository is organized as follows:
 * **`/public`:** Contains two JSON data samples used for initial state.
 * **`/data-generator`:** A Node.js CLI tool built to generate realistic work center and order datasets using **Ollama**.
 * **`claude-session.md`:** An exported Claude Code session transcript. Note: this contains only the **last session**, not the full development history.
+* **`claude-session-horizontal-infinite-scroll.md`:** Claude Code session transcript covering the horizontal infinite scroll implementation.
 
 ---
 
@@ -64,7 +65,7 @@ This project evolved through several architectural iterations to balance perform
 | **Unit Tests** | ✅ Done | Main components and validators covered. |
 | **Performance** | ✅ Done | Optimized for low-end hardware. |
 | **Tooltips** | ✅ Done  | On bar hover |
-| **Infinite Scroll** | ⚠️ Partial | Vertical is functional; horizontal is date-traversable. | easy to implement in the next iteration
+| **Infinite Scroll** | ✅ Done | Vertical and horizontal infinite scroll fully functional. |
 | **Keyboard Nav** | ❌ Not Done | Planned for future release. |
 | **"Today" Button** | ❌ Not Done | - |
 
@@ -81,3 +82,14 @@ The work order creation and update form previously only captured **date** values
 - Dates and times are now combined before saving, so work order bars reflect the exact intended schedule.
 - Validators (`endDateAfterStartDate`, `overlapValidator`) updated to account for time when comparing dates.
 - Added an **integration test** (`timeline-grid-work-order-integration.spec.ts`) that verifies bar positioning after editing a work order's end date/time across Month and Day timescales.
+
+### Horizontal Infinite Scroll
+Added bidirectional horizontal infinite scroll to the timeline grid. When the user scrolls past 70% (right/future) or below 30% (left/past) of the scrollable area, the date range automatically recenters around the current scroll position:
+
+- Captures the anchor date from the current scroll position using `getScrollEdgeDate()`.
+- Regenerates time units centered on the new anchor via `getTimeScaleDateRange()`.
+- Restores scroll position seamlessly with `scrollToDate()`.
+- Uses a 200ms debounce to avoid recalculations during fast scrolling.
+- Works across all timescales (Month, Week, Day).
+
+See [`claude-session-horizontal-infinite-scroll.md`](claude-session-horizontal-infinite-scroll.md) for this last development session.
